@@ -1,4 +1,17 @@
 {
   "name": "statsapp",
-  "packageManager": "yarn@3.5.0"
+  "author": "MMK21",
+  "description": "A Node.js script to process WhatsApp chat exports and create data visualizations",
+  "license": "MIT",
+  "type": "module",
+  "version": "v0.1.0",
+  "packageManager": "yarn@3.5.0",
+  "main": "dist/main.js",
+  "devDependencies": {
+    "@types/node": "^20.2.1",
+    "typescript": "^5.0.4"
+  },
+  "scripts": {
+    "watch": "tsc --watch"
+  }
 }
