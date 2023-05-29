@@ -60,20 +60,20 @@ debugger
 function objectToCSV(
   object: Record<string, Record<string, unknown>> | Record<string, unknown>[]
 ) {
-  const inputIsArray = Array.isArray(object)
-  const dataAs2DArray: string[][] = [[""]]
+  const useRowHeadings = !Array.isArray(object)
+  const dataAs2DArray: string[][] = useRowHeadings ? [[""]] : [[]]
   const indexes = new Map<string, number>()
 
   Object.entries(object).forEach(([rowHeading, rowData]) => {
-    const row = inputIsArray ? [] : [rowHeading]
+    const row = useRowHeadings ? [rowHeading] : []
     Object.entries(rowData).forEach(([colHeading, cell]) => {
       const matchedIndex = indexes.get(colHeading)
-      if (matchedIndex) return (row[matchedIndex] = `${cell}`)
+      if (matchedIndex !== undefined) return (row[matchedIndex] = `${cell}`)
 
       // We haven't encountered this key before, so make a new column
-      const startingIndex = inputIsArray
-      const lastIndex = Array.from(indexes.values()).at(-1) || 0
-      const newIndex = lastIndex + 1
+      const startingIndex = useRowHeadings ? 1 : 0
+      const lastIndex = Array.from(indexes.values()).at(-1)
+      const newIndex = lastIndex === undefined ? startingIndex : lastIndex + 1
       indexes.set(colHeading, newIndex)
       row[newIndex] = `${cell}`
     })
