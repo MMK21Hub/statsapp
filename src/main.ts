@@ -1,9 +1,18 @@
-import { readFile } from "node:fs/promises"
+import { readFile, writeFile } from "node:fs/promises"
+import arg from "arg"
+
+const args = arg({
+  "--input": String,
+  "--daily-stats": String,
+})
 
 const chatExportParser =
   /^(\d{2}\/\d{2}\/\d{4}), (\d{1,2}:\d{2} [ap]m) - (.*): (.*)/gm
 
-const data = await readFile(process.argv[2], "utf8")
+const inputFile = args["--input"]
+if (!inputFile)
+  throw new Error("You must provide the path to the chat export file")
+const data = await readFile(inputFile, "utf8")
 
 type DailyStats = Record<string, Record<string, number>>
 type PersonStats = Record<string, number>
@@ -73,7 +82,21 @@ while ((match = chatExportParser.exec(data))) {
 
 const filteredHourlyStats = purgePeople(personStats, hourlyStats)
 
-console.log(objectToCSV(filteredHourlyStats))
+const outputs: {
+  arg: keyof typeof args
+  getOutput: () => string
+}[] = [{ arg: "--daily-stats", getOutput: () => objectToCSV(dailyStats) }]
+
+for (const config of outputs) {
+  const outputPath = args[config.arg]
+  if (!outputPath) continue
+
+  const output = config.getOutput()
+  for (const path of arrayWrap(outputPath)) {
+    await writeFile(path, output, "utf8")
+  }
+}
+
 debugger
 
 /** Remove individuals from the hourly stats if their total messages is below a threshold */
@@ -134,4 +157,8 @@ function toWeekday(dayIndex: number) {
 
   if (dayIndex in days) return days[dayIndex]
   throw new Error(`${dayIndex} is not a valid weekday index`)
+}
+
+function arrayWrap<T>(arrayMaybe: T[] | T) {
+  return Array.isArray(arrayMaybe) ? arrayMaybe : [arrayMaybe]
 }

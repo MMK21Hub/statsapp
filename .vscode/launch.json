@@ -11,7 +11,7 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/dist/main.js",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "args": ["data/full-export.txt"]
+      "args": ["--input", "data/full-export.txt"]
     }
   ]
 }

@@ -14,5 +14,8 @@
   },
   "scripts": {
     "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "arg": "^5.0.2"
   }
 }
