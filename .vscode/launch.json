@@ -11,7 +11,7 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/dist/main.js",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "args": ["data/WhatsApp_Chat_with_AABEJMMPT.txt"]
+      "args": ["data/full-export.txt"]
     }
   ]
 }

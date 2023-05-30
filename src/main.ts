@@ -5,12 +5,18 @@ const chatExportParser =
 
 const data = await readFile(process.argv[2], "utf8")
 
-const dailyStats: Record<string, Record<string, number>> = {}
-const hourlyStats: {
+type DailyStats = Record<string, Record<string, number>>
+type PersonStats = Record<string, number>
+type HourlyStats = {
   weekday: string
   hour: string
   count: number
-}[] = []
+  name: string
+}[]
+
+const dailyStats: DailyStats = {}
+const hourlyStats: HourlyStats = []
+const personStats: PersonStats = {}
 
 let match: RegExpMatchArray | null = chatExportParser.exec(data)
 while ((match = chatExportParser.exec(data))) {
@@ -23,11 +29,12 @@ while ((match = chatExportParser.exec(data))) {
   const hour = isAfternoon ? timeParts[0] + 12 : timeParts[0]
   const minute = timeParts[1]
   const dateTime = new Date(year, month - 1, day, hour, minute)
+  const firstName = name.split(" ")[0]
 
   // Daily stats
   {
     const dateKey = date.toLocaleDateString()
-    const nameKey = name.split(" ")[0]
+    const nameKey = firstName
     if (!dailyStats[dateKey]) dailyStats[dateKey] = {}
     const currentCount = dailyStats[dateKey][nameKey]
     if (!currentCount) dailyStats[dateKey][nameKey] = 0
@@ -39,7 +46,10 @@ while ((match = chatExportParser.exec(data))) {
     const currentWeekday = toWeekday(date.getDay())
     const currentHour = dateTime.getHours().toString()
     const matchedIndex = hourlyStats.findIndex(
-      (point) => point.hour === currentHour && point.weekday === currentWeekday
+      (point) =>
+        point.hour === currentHour &&
+        point.weekday === currentWeekday &&
+        point.name === firstName
     )
 
     if (matchedIndex === -1) {
@@ -47,15 +57,37 @@ while ((match = chatExportParser.exec(data))) {
         count: 1,
         hour: currentHour,
         weekday: currentWeekday,
+        name: firstName,
       })
     } else {
       hourlyStats[matchedIndex].count++
     }
   }
+
+  // Per-person stats
+  {
+    if (!(firstName in personStats)) personStats[firstName] = 0
+    personStats[firstName]++
+  }
 }
 
-console.log(objectToCSV(hourlyStats))
+const filteredHourlyStats = purgePeople(personStats, hourlyStats)
+
+console.log(objectToCSV(filteredHourlyStats))
 debugger
+
+/** Remove individuals from the hourly stats if their total messages is below a threshold */
+function purgePeople(
+  personStats: PersonStats,
+  hourlyStats: HourlyStats
+): HourlyStats {
+  const minMessages = 100
+  const includePeople = Object.entries(personStats).map(([person, count]) =>
+    count > minMessages ? person : null
+  )
+
+  return hourlyStats.filter(({ name }) => includePeople.includes(name))
+}
 
 function objectToCSV(
   object: Record<string, Record<string, unknown>> | Record<string, unknown>[]
