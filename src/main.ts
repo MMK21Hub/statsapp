@@ -4,6 +4,7 @@ import arg from "arg"
 const args = arg({
   "--input": String,
   "--daily-stats": String,
+  "--hourly-stats": String,
 })
 
 const chatExportParser =
@@ -85,7 +86,10 @@ const filteredHourlyStats = purgePeople(personStats, hourlyStats)
 const outputs: {
   arg: keyof typeof args
   getOutput: () => string
-}[] = [{ arg: "--daily-stats", getOutput: () => objectToCSV(dailyStats) }]
+}[] = [
+  { arg: "--daily-stats", getOutput: () => objectToCSV(dailyStats) },
+  { arg: "--hourly-stats", getOutput: () => objectToCSV(filteredHourlyStats) },
+]
 
 for (const config of outputs) {
   const outputPath = args[config.arg]

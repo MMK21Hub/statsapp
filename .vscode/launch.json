@@ -5,13 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "name": "Launch main program",
+      "type": "f5anything",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/dist/main.js",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "args": ["--input", "data/full-export.txt"]
+      "command": "yarn launch --input data/full-export.txt",
+      "showTerminal": false
     }
   ]
 }

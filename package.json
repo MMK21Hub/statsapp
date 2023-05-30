@@ -13,7 +13,8 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
-    "watch": "tsc --watch"
+    "watch": "tsc --watch",
+    "launch": "yarn node dist/main.js"
   },
   "dependencies": {
     "arg": "^5.0.2"
