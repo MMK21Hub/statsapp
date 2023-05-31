@@ -1,5 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises"
 import arg from "arg"
+import { DailyStats, HourlyStats, Message, PersonStats } from "./types.js"
 
 const args = arg(
   {
@@ -20,35 +21,16 @@ if (!inputFile)
   throw new Error("You must provide the path to the chat export file")
 const data = await readFile(inputFile, "utf8")
 
-type DailyStats = Record<string, Record<string, number>>
-type PersonStats = Record<string, number>
-type HourlyStats = {
-  weekday: string
-  hour: string
-  count: number
-  name: string
-}[]
-
 const dailyStats: DailyStats = {}
 const hourlyStats: HourlyStats = []
 const personStats: PersonStats = {}
 
-let match: RegExpMatchArray | null = chatExportParser.exec(data)
-while ((match = chatExportParser.exec(data))) {
-  const [_, dateString, timeString, name, content] = match!
-  const [day, month, year] = dateString.split("/").map((num) => parseInt(num))
-  const date = new Date(year, month - 1, day)
+const messages = parseChatExport(data)
 
-  const timeParts = timeString.split(":").map((num) => parseInt(num))
-  const isAfternoon = timeString.includes("pm")
-  const hour = isAfternoon ? timeParts[0] + 12 : timeParts[0]
-  const minute = timeParts[1]
-  const dateTime = new Date(year, month - 1, day, hour, minute)
-  const firstName = name.split(" ")[0]
-
+messages.forEach(({ dateISO, firstName, timestamp }) => {
   // Daily stats
   {
-    const dateKey = date.toLocaleDateString()
+    const dateKey = dateISO
     const nameKey = firstName
     if (!dailyStats[dateKey]) dailyStats[dateKey] = {}
     const currentCount = dailyStats[dateKey][nameKey]
@@ -58,8 +40,8 @@ while ((match = chatExportParser.exec(data))) {
 
   // Hourly stats
   {
-    const currentWeekday = toWeekday(date.getDay())
-    const currentHour = dateTime.getHours().toString()
+    const currentWeekday = toWeekday(timestamp.getDay())
+    const currentHour = timestamp.getHours().toString()
     const matchedIndex = hourlyStats.findIndex(
       (point) =>
         point.hour === currentHour &&
@@ -84,7 +66,7 @@ while ((match = chatExportParser.exec(data))) {
     if (!(firstName in personStats)) personStats[firstName] = 0
     personStats[firstName]++
   }
-}
+})
 
 const filteredHourlyStats = purgePeople(personStats, hourlyStats)
 
@@ -107,6 +89,40 @@ for (const config of outputs) {
 }
 
 debugger
+
+/**
+ * Parses a chat export file from WhatsApp. Doesn't work with messages that contain newlines.
+ * Ignores system messages.
+ * @returns an array of messages
+ */
+function parseChatExport(exportData: string) {
+  const messages: Message[] = []
+
+  let match: RegExpMatchArray | null = chatExportParser.exec(data)
+  while ((match = chatExportParser.exec(data))) {
+    const [_, dateString, timeString, name, content] = match!
+    const [day, month, year] = dateString.split("/").map((num) => parseInt(num))
+    const date = new Date(year, month - 1, day)
+    const dateISO = date.toISOString().split("T")[0]
+
+    const timeParts = timeString.split(":").map((num) => parseInt(num))
+    const isAfternoon = timeString.includes("pm")
+    const hour = isAfternoon ? timeParts[0] + 12 : timeParts[0]
+    const minute = timeParts[1]
+    const dateTime = new Date(year, month - 1, day, hour, minute)
+    const firstName = name.split(" ")[0]
+
+    messages.push({
+      content,
+      fullName: name,
+      firstName,
+      timestamp: dateTime,
+      dateISO,
+    })
+  }
+
+  return messages
+}
 
 /** Remove individuals from the hourly stats if their total messages is below a threshold */
 function purgePeople(
