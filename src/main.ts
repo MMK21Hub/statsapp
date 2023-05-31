@@ -1,11 +1,16 @@
 import { readFile, writeFile } from "node:fs/promises"
 import arg from "arg"
 
-const args = arg({
-  "--input": String,
-  "--daily-stats": String,
-  "--hourly-stats": String,
-})
+const args = arg(
+  {
+    "--input": String,
+    "--daily-stats": String,
+    "--hourly-stats": String,
+  },
+  {
+    permissive: true,
+  }
+)
 
 const chatExportParser =
   /^(\d{2}\/\d{2}\/\d{4}), (\d{1,2}:\d{2} [ap]m) - (.*): (.*)/gm
@@ -92,10 +97,10 @@ const outputs: {
 ]
 
 for (const config of outputs) {
+  const output = config.getOutput()
   const outputPath = args[config.arg]
   if (!outputPath) continue
 
-  const output = config.getOutput()
   for (const path of arrayWrap(outputPath)) {
     await writeFile(path, output, "utf8")
   }
@@ -144,8 +149,39 @@ function objectToCSV(
     dataAs2DArray[0][index] = label
   })
 
-  const dataAsCSV = dataAs2DArray.map((row) => row.join(",")).join("\n")
-  return dataAsCSV
+  // Sort the columns based on sum of their cells
+  if (useRowHeadings) {
+    const oldColumns = transposeArray(dataAs2DArray)
+    const rowHeadings = oldColumns.shift()! // Remove the row headings
+    const columnStats: { sum: number; cells: string[] }[] = []
+    oldColumns.forEach((cells, index) => {
+      const [colHeading, ...rawDataCells] = cells
+      const dataCells = rawDataCells.map((num) => parseInt(num))
+      const sum = calculateSum(dataCells)
+      columnStats.push({ sum, cells })
+    })
+
+    const sortedSums = columnStats.sort((a, b) => b.sum - a.sum) // Descending order
+    const newColumns = sortedSums.map(({ cells }) => cells)
+    newColumns.unshift(rowHeadings) // Add the headings back to the start
+    return exportCSV(transposeArray(newColumns))
+  }
+
+  return exportCSV(dataAs2DArray)
+}
+
+function exportCSV(array2D: string[][]) {
+  return array2D.map((row) => row.join(",")).join("\n")
+}
+
+function calculateSum(numbers: (number | null | undefined)[]): number {
+  const sum = numbers.reduce((a, b) => {
+    const numberA = a || 0
+    const numberB = b || 0
+    return numberA + numberB
+  }, 0) as number
+
+  return sum
 }
 
 function toWeekday(dayIndex: number) {
@@ -165,4 +201,8 @@ function toWeekday(dayIndex: number) {
 
 function arrayWrap<T>(arrayMaybe: T[] | T) {
   return Array.isArray(arrayMaybe) ? arrayMaybe : [arrayMaybe]
+}
+
+function transposeArray<T>(array: T[][]) {
+  return array[0].map((_, colIndex) => array.map((row) => row[colIndex]))
 }

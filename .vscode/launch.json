@@ -8,7 +8,7 @@
       "name": "Launch main program",
       "type": "f5anything",
       "request": "launch",
-      "command": "yarn launch --input data/full-export.txt",
+      "command": "yarn debug --input data/full-export.txt",
       "showTerminal": false
     }
   ]
