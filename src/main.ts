@@ -8,6 +8,7 @@ const args = arg(
     "--input": String,
     "--daily-stats": String,
     "--hourly-stats": String,
+    "--daily-word-stats": String,
   },
   {
     permissive: true,
@@ -23,13 +24,14 @@ if (!inputFile)
 const data = await readFile(inputFile, "utf8")
 
 const dailyStats: DailyStats = {}
+const dailyWordStats: DailyStats = {}
 const hourlyStats: HourlyStats = []
 const personStats: PersonStats = {}
 
 const messages = parseChatExport(data)
 
-messages.forEach(({ dateISO, firstName, timestamp }) => {
-  // Daily stats
+messages.forEach(({ dateISO, firstName, timestamp, content }) => {
+  // Daily message-based stats
   {
     const dateKey = dateISO
     const nameKey = firstName
@@ -37,6 +39,18 @@ messages.forEach(({ dateISO, firstName, timestamp }) => {
     const currentCount = dailyStats[dateKey][nameKey]
     if (!currentCount) dailyStats[dateKey][nameKey] = 0
     dailyStats[dateKey][nameKey]++
+  }
+
+  // Daily word-based stats
+  {
+    // A simple method of counting the number of words
+    const words = content.split(" ").length
+    const stats = dailyWordStats
+
+    if (!stats[dateISO]) stats[dateISO] = {}
+    const currentCount = stats[dateISO][firstName]
+    if (!currentCount) stats[dateISO][firstName] = 0
+    stats[dateISO][firstName] += words
   }
 
   // Hourly stats
@@ -76,6 +90,7 @@ const outputs: {
   getOutput: () => string
 }[] = [
   { arg: "--daily-stats", getOutput: () => objectToCSV(dailyStats) },
+  { arg: "--daily-word-stats", getOutput: () => objectToCSV(dailyWordStats) },
   { arg: "--hourly-stats", getOutput: () => objectToCSV(filteredHourlyStats) },
 ]
 
