@@ -1,0 +1,94 @@
+export function objectToCSV(
+  object: Record<string, Record<string, unknown>> | Record<string, unknown>[]
+) {
+  const useRowHeadings = !Array.isArray(object)
+  const dataAs2DArray: string[][] = useRowHeadings ? [[""]] : [[]]
+  const indexes = new Map<string, number>()
+
+  Object.entries(object).forEach(([rowHeading, rowData]) => {
+    const row = useRowHeadings ? [rowHeading] : []
+    Object.entries(rowData).forEach(([colHeading, cell]) => {
+      const matchedIndex = indexes.get(colHeading)
+      if (matchedIndex !== undefined) return (row[matchedIndex] = `${cell}`)
+
+      // We haven't encountered this key before, so make a new column
+      const startingIndex = useRowHeadings ? 1 : 0
+      const lastIndex = Array.from(indexes.values()).at(-1)
+      const newIndex = lastIndex === undefined ? startingIndex : lastIndex + 1
+      indexes.set(colHeading, newIndex)
+      row[newIndex] = `${cell}`
+    })
+    dataAs2DArray.push(row)
+  })
+
+  // Add the headings for each column
+  indexes.forEach((index, label) => {
+    dataAs2DArray[0][index] = label
+  })
+
+  // Sort the columns based on sum of their cells
+  if (useRowHeadings) {
+    const oldColumns = transposeArray(dataAs2DArray)
+    const rowHeadings = oldColumns.shift()! // Remove the row headings
+    const columnStats: { sum: number; cells: string[] }[] = []
+    oldColumns.forEach((cells, index) => {
+      const [colHeading, ...rawDataCells] = cells
+      const dataCells = rawDataCells.map((num) => parseInt(num))
+      const sum = calculateSum(dataCells)
+      columnStats.push({ sum, cells })
+    })
+
+    const sortedSums = columnStats.sort((a, b) => b.sum - a.sum) // Descending order
+    const newColumns = sortedSums.map(({ cells }) => cells)
+    newColumns.unshift(rowHeadings) // Add the headings back to the start
+    return exportCSV(transposeArray(newColumns))
+  }
+
+  return exportCSV(dataAs2DArray)
+}
+
+/** Turns a 2D array of strings into a CSV string. Doesn't support CSV quotes or escaping. */
+export function exportCSV(array2D: string[][]) {
+  return array2D.map((row) => row.join(",")).join("\n")
+}
+
+/** Sums an array of numbers, treating nullish values as `0` */
+export function calculateSum(numbers: (number | null | undefined)[]): number {
+  const sum = numbers.reduce((a, b) => {
+    const numberA = a || 0
+    const numberB = b || 0
+    return numberA + numberB
+  }, 0) as number
+
+  return sum
+}
+
+/**
+ * Maps weekday indexes to weekday names
+ * @param dayIndex The weekday index, as returned by `Date#getDay()`
+ * @returns The short English version of the day, e.g. "Mon"
+ */
+export function toWeekday(dayIndex: number) {
+  const days: Record<number, string> = {
+    1: "Mon",
+    2: "Tue",
+    3: "Wed",
+    4: "Thu",
+    5: "Fri",
+    6: "Sat",
+    0: "Sun",
+  }
+
+  if (dayIndex in days) return days[dayIndex]
+  throw new Error(`${dayIndex} is not a valid weekday index`)
+}
+
+/** If the parameter isn't an array, returns a single-item array with it in. Otherwise, returns the provided array. */
+export function arrayWrap<T>(arrayMaybe: T[] | T) {
+  return Array.isArray(arrayMaybe) ? arrayMaybe : [arrayMaybe]
+}
+
+/** "Rotates" a 2D array, turning its rows into columns and columns into rows */
+export function transposeArray<T>(array: T[][]) {
+  return array[0].map((_, colIndex) => array.map((row) => row[colIndex]))
+}
