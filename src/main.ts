@@ -119,10 +119,8 @@ function parseChatExport(exportData: string) {
     const [_, dateString, timeString, name, content] = match!
     const [day, month, year] = dateString.split("/").map((num) => parseInt(num))
     const dateIndexes = [year, month - 1, day] as const
-    const date = new Date(...dateIndexes)
-    const dateISO = date.toISOString().split("T")[0]
-
     const dateTime = new Date(...dateIndexes, ...parse12HourTime(timeString))
+    const dateISO = dateTime.toISOString().split("T")[0]
     const firstName = name.split(" ")[0]
 
     messages.push({
