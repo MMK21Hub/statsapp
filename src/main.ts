@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises"
 import arg from "arg"
 import { DailyStats, HourlyStats, Message, PersonStats } from "./types.js"
-import { toWeekday, objectToCSV, arrayWrap } from "./util.js"
+import { toWeekday, objectToCSV, arrayWrap, parse12HourTime } from "./util.js"
 
 const args = arg(
   {
@@ -118,14 +118,11 @@ function parseChatExport(exportData: string) {
   while ((match = chatExportParser.exec(data))) {
     const [_, dateString, timeString, name, content] = match!
     const [day, month, year] = dateString.split("/").map((num) => parseInt(num))
-    const date = new Date(year, month - 1, day)
+    const dateIndexes = [year, month - 1, day] as const
+    const date = new Date(...dateIndexes)
     const dateISO = date.toISOString().split("T")[0]
 
-    const timeParts = timeString.split(":").map((num) => parseInt(num))
-    const isAfternoon = timeString.includes("pm")
-    const hour = isAfternoon ? timeParts[0] + 12 : timeParts[0]
-    const minute = timeParts[1]
-    const dateTime = new Date(year, month - 1, day, hour, minute)
+    const dateTime = new Date(...dateIndexes, ...parse12HourTime(timeString))
     const firstName = name.split(" ")[0]
 
     messages.push({

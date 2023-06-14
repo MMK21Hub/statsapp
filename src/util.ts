@@ -83,6 +83,30 @@ export function toWeekday(dayIndex: number) {
   throw new Error(`${dayIndex} is not a valid weekday index`)
 }
 
+/**
+ * Parses a 12-hour timestamp, e.g. "6:19 pm", into a 24-hour time
+ * @param time The time string in human-readable form
+ * @returns An array of numbers. First item is the hour and second item is the minute.
+ */
+export function parse12HourTime(time: string): [number, number] {
+  const numberPart = time.split(" ")[0]
+  const [rawHour, rawMinute] = numberPart.split(":").map((num) => parseInt(num))
+  const isAfternoon = time.includes("pm")
+
+  if (isAfternoon) {
+    // e.g. 12:15 pm
+    if (rawHour === 12) return [12, rawMinute]
+    // e.g. 3:30 pm
+    const actualHour = rawHour + 12
+    return [actualHour, rawMinute]
+  }
+
+  // e.g. 12:05 am
+  if (rawHour === 12) return [0, rawMinute]
+  // e.g. 7:00 am
+  return [rawHour, rawMinute]
+}
+
 /** If the parameter isn't an array, returns a single-item array with it in. Otherwise, returns the provided array. */
 export function arrayWrap<T>(arrayMaybe: T[] | T) {
   return Array.isArray(arrayMaybe) ? arrayMaybe : [arrayMaybe]
