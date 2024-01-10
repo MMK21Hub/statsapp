@@ -5,11 +5,21 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch main program",
-      "type": "f5anything",
+      "name": "Run main script",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": ["node"],
+      "program": "${workspaceFolder}/dist/main.js",
+      "args": [
+        "--input",
+        "data/temp-export.txt",
+        "--daily-stats",
+        "out/daily-stats.csv",
+        "--hourly-stats",
+        "out/hourly.csv"
+      ],
       "request": "launch",
-      "command": "yarn debug --input data/full-export.txt",
-      "showTerminal": false
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
     }
   ]
 }
