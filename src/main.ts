@@ -28,13 +28,12 @@ async function readFilesFromDirectory(
   const promises = filenames.map(
     async (filename): Promise<[string, string]> => {
       const fullPath = path.join(directory, filename)
-      return [filename, await readFile(fullPath, "utf8")]
+      const contents = await readFile(fullPath, "utf8")
+      return [filename, contents]
     }
   )
   const resultArray = await Promise.all(promises)
-  const result = new Map<string, string>()
-  resultArray.forEach(([path, content]) => result.set(path, content))
-  return result
+  return new Map(resultArray)
 }
 
 async function getProcessedChatLog(): Promise<Message[]> {
