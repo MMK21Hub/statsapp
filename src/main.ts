@@ -151,7 +151,7 @@ function parseChatExport(exportData: string) {
   const messages: Message[] = []
 
   let match: RegExpMatchArray | null = chatExportParser.exec(exportData)
-  while ((match = chatExportParser.exec(data))) {
+  while ((match = chatExportParser.exec(exportData))) {
     const [_, dateString, timeString, name, content] = match!
     const [day, month, year] = dateString.split("/").map((num) => parseInt(num))
     const dateIndexes = [year, month - 1, day] as const
