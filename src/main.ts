@@ -1,11 +1,14 @@
-import { readFile, writeFile } from "node:fs/promises"
+import { readFile, writeFile, readdir } from "node:fs/promises"
 import arg from "arg"
 import { DailyStats, HourlyStats, Message, PersonStats } from "./types.js"
 import { toWeekday, objectToCSV, arrayWrap, parse12HourTime } from "./util.js"
+import * as path from "node:path"
+import { mergeExports } from "./merger.js"
 
 const args = arg(
   {
     "--input": String,
+    "--input-dir": String,
     "--daily-stats": String,
     "--hourly-stats": String,
     "--daily-word-stats": String,
@@ -18,17 +21,50 @@ const args = arg(
 const chatExportParser =
   /^(\d{2}\/\d{2}\/\d{4}), (\d{1,2}:\d{2} [ap]m) - (.*): (.*)/gm
 
-const inputFile = args["--input"]
-if (!inputFile)
-  throw new Error("You must provide the path to the chat export file")
-const data = await readFile(inputFile, "utf8")
+async function readFilesFromDirectory(
+  directory: string
+): Promise<Map<string, string>> {
+  const filenames = await readdir(directory)
+  const promises = filenames.map(
+    async (filename): Promise<[string, string]> => {
+      const fullPath = path.join(directory, filename)
+      return [filename, await readFile(fullPath, "utf8")]
+    }
+  )
+  const resultArray = await Promise.all(promises)
+  const result = new Map<string, string>()
+  resultArray.forEach(([path, content]) => result.set(path, content))
+  return result
+}
+
+async function getProcessedChatLog(): Promise<Message[]> {
+  const inputFile = args["--input"]
+  const inputDir = args["--input-dir"]
+  if (inputFile) {
+    const text = await readFile(inputFile, "utf8")
+    return parseChatExport(text)
+  }
+  if (inputDir) {
+    const exports = await readFilesFromDirectory(inputDir)
+    const parsedExports = Array.from(exports.values()).map((text) =>
+      parseChatExport(text)
+    )
+    const mergeResult = mergeExports(parsedExports)
+    console.warn(mergeResult.gaps)
+    return mergeResult.messages
+  }
+
+  throw new Error(
+    "You must provide the path to a chat export file, or a directory of chat export files"
+  )
+}
+
+const messages = await getProcessedChatLog()
 
 const dailyStats: DailyStats = {}
 const dailyWordStats: DailyStats = {}
 const hourlyStats: HourlyStats = []
 const personStats: PersonStats = {}
-
-const messages = parseChatExport(data)
 
 messages.forEach(({ dateISO, firstName, timestamp, content }) => {
   // Daily message-based stats
