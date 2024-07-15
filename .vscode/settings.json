@@ -5,7 +5,6 @@
   },
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": [
-    "statsapp"
-  ]
+  "cSpell.words": ["statsapp"],
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.js"
 }

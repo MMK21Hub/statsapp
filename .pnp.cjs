@@ -29,14 +29,15 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:20.2.5"],\
           ["arg", "npm:5.0.2"],\
           ["prettier", "npm:2.8.8"],\
-          ["typescript", "patch:typescript@npm%3A5.0.4#optional!builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
+          ["typescript", "patch:typescript@npm%3A5.0.4#optional!builtin<compat/typescript>::version=5.0.4&hash=b5f058"],\
+          ["yauzl", "npm:3.1.3"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
     ["@types/node", [\
       ["npm:20.2.5", {\
-        "packageLocation": "../../.yarn/berry/cache/@types-node-npm-20.2.5-0014d2d9ce-10.zip/node_modules/@types/node/",\
+        "packageLocation": "./.yarn/cache/@types-node-npm-20.2.5-0014d2d9ce-37529473f0.zip/node_modules/@types/node/",\
         "packageDependencies": [\
           ["@types/node", "npm:20.2.5"]\
         ],\
@@ -45,16 +46,34 @@ const RAW_RUNTIME_STATE =
     ]],\
     ["arg", [\
       ["npm:5.0.2", {\
-        "packageLocation": "../../.yarn/berry/cache/arg-npm-5.0.2-2f5805a547-10.zip/node_modules/arg/",\
+        "packageLocation": "./.yarn/cache/arg-npm-5.0.2-2f5805a547-92fe7de222.zip/node_modules/arg/",\
         "packageDependencies": [\
           ["arg", "npm:5.0.2"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
+    ["buffer-crc32", [\
+      ["npm:0.2.13", {\
+        "packageLocation": "./.yarn/cache/buffer-crc32-npm-0.2.13-c4b6fceac1-06252347ae.zip/node_modules/buffer-crc32/",\
+        "packageDependencies": [\
+          ["buffer-crc32", "npm:0.2.13"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["pend", [\
+      ["npm:1.2.0", {\
+        "packageLocation": "./.yarn/cache/pend-npm-1.2.0-7a13d93266-6c72f52433.zip/node_modules/pend/",\
+        "packageDependencies": [\
+          ["pend", "npm:1.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["prettier", [\
       ["npm:2.8.8", {\
-        "packageLocation": "../../.yarn/berry/cache/prettier-npm-2.8.8-430828a36c-10.zip/node_modules/prettier/",\
+        "packageLocation": "./.yarn/cache/prettier-npm-2.8.8-430828a36c-00cdb6ab02.zip/node_modules/prettier/",\
         "packageDependencies": [\
           ["prettier", "npm:2.8.8"]\
         ],\
@@ -69,16 +88,28 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:20.2.5"],\
           ["arg", "npm:5.0.2"],\
           ["prettier", "npm:2.8.8"],\
-          ["typescript", "patch:typescript@npm%3A5.0.4#optional!builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
+          ["typescript", "patch:typescript@npm%3A5.0.4#optional!builtin<compat/typescript>::version=5.0.4&hash=b5f058"],\
+          ["yauzl", "npm:3.1.3"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
     ["typescript", [\
       ["patch:typescript@npm%3A5.0.4#optional!builtin<compat/typescript>::version=5.0.4&hash=b5f058", {\
-        "packageLocation": "../../.yarn/berry/cache/typescript-patch-ce5481e54d-10.zip/node_modules/typescript/",\
+        "packageLocation": "./.yarn/cache/typescript-patch-ce5481e54d-b1b62606c7.zip/node_modules/typescript/",\
         "packageDependencies": [\
           ["typescript", "patch:typescript@npm%3A5.0.4#optional!builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["yauzl", [\
+      ["npm:3.1.3", {\
+        "packageLocation": "./.yarn/cache/yauzl-npm-3.1.3-857924a78f-0999730880.zip/node_modules/yauzl/",\
+        "packageDependencies": [\
+          ["yauzl", "npm:3.1.3"],\
+          ["buffer-crc32", "npm:0.2.13"],\
+          ["pend", "npm:1.2.0"]\
         ],\
         "linkType": "HARD"\
       }]\
