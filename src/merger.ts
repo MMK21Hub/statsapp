@@ -28,10 +28,16 @@ function findMatchingMessage(messages: Message[], targetMessage: Message) {
     return null
   }
 
-  while (messages[i].timestamp >= targetMessage.timestamp) {
-    if (messages[i].timestamp !== targetMessage.timestamp) continue
-    if (messages[i].content === targetMessage.content) return i
-    i--
+  while (messages[i].timestamp >= targetMessage.timestamp && i >= 0) {
+    if (messages[i].timestamp !== targetMessage.timestamp) {
+      i--
+      continue
+    }
+    if (messages[i].content === targetMessage.content) {
+      debugger
+      return i
+    }
+    console.log("AAA")
   }
   return -1
 }
@@ -50,11 +56,12 @@ export function mergeExports(exports: Message[][]): MergerResult {
       return
     }
 
-    let attemptedMessages = 1
+    let attemptedMessages = 0
     while (
       attemptedMessages <= MAX_OVERLAP_CHECKS &&
       attemptedMessages < currentExport.length
     ) {
+      attemptedMessages++
       debug(
         `Looking for a match for current export message @ index ${attemptedMessages}`
       )

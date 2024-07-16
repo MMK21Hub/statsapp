@@ -7,7 +7,11 @@
     {
       "name": "Run main script",
       "runtimeExecutable": "yarn",
-      "runtimeArgs": ["node"],
+      "runtimeArgs": [
+        "node",
+        "--preserve-symlinks",
+        "--preserve-symlinks-main"
+      ],
       "program": "${workspaceFolder}/dist/main.js",
       "args": ["--input-dir", "data"],
       "env": {
@@ -16,6 +20,7 @@
       "request": "launch",
       "skipFiles": ["<node_internals>/**"],
       "type": "node"
+      // "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
 }
