@@ -58,6 +58,7 @@ export function mergeExports(exports: Message[][]): MergerResult {
       debug(
         `Looking for a match for chat log message @ index -${attemptedMessages}`
       )
+      debugger
       const lastMessage = currentExport.at(-attemptedMessages)!
       const matchResult = findMatchingMessage(merged, lastMessage)
       if (matchResult === null) {

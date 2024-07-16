@@ -48,9 +48,13 @@ async function getProcessedChatLog(): Promise<Message[]> {
   }
   if (inputDir) {
     const exports = await readFilesFromDirectory(inputDir)
-    const parsedExports = Array.from(exports.values()).map((text) =>
-      parseChatExport(text)
-    )
+    const parsedExports = Array.from(exports.entries())
+      .sort(([filename_a, _a], [filename_b, _b]) => {
+        if (filename_a < filename_b) return -1
+        if (filename_a > filename_b) return +1
+        return 0
+      })
+      .map(([filename, text]) => parseChatExport(text))
     const mergeResult = mergeExports(parsedExports)
     console.warn(mergeResult.gaps)
     return mergeResult.messages
