@@ -1,4 +1,4 @@
-import { readFile, writeFile, readdir } from "node:fs/promises"
+import { readFile, writeFile, readdir, stat } from "node:fs/promises"
 import arg from "arg"
 import { DailyStats, HourlyStats, Message, PersonStats } from "./types.js"
 import { toWeekday, objectToCSV, arrayWrap, parse12HourTime } from "./util.js"
@@ -25,15 +25,18 @@ async function readFilesFromDirectory(
   directory: string
 ): Promise<Map<string, string>> {
   const filenames = await readdir(directory)
+  const resultMap = new Map<string, string>()
   const promises = filenames.map(
-    async (filename): Promise<[string, string]> => {
+    async (filename): Promise<[string, string] | undefined> => {
       const fullPath = path.join(directory, filename)
+      const fileInfo = await stat(fullPath)
+      if (!fileInfo.isFile()) return
       const contents = await readFile(fullPath, "utf8")
-      return [filename, contents]
+      resultMap.set(filename, contents)
     }
   )
-  const resultArray = await Promise.all(promises)
-  return new Map(resultArray)
+  await Promise.all(promises)
+  return resultMap
 }
 
 async function getProcessedChatLog(): Promise<Message[]> {
