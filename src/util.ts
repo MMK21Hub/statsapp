@@ -1,3 +1,8 @@
+export function debug(string: string) {
+  if (!process.env.VERBOSE) return
+  console.debug(string)
+}
+
 export function objectToCSV(
   object: Record<string, Record<string, unknown>> | Record<string, unknown>[]
 ) {

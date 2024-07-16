@@ -1,4 +1,5 @@
 import { Message } from "./types.js"
+import { debug } from "./util.js"
 
 export interface MergerGap {
   from: Date
@@ -37,12 +38,15 @@ function findMatchingMessage(messages: Message[], targetMessage: Message) {
 
 const MAX_OVERLAP_CHECKS = Infinity // 15
 export function mergeExports(exports: Message[][]): MergerResult {
+  debug(`Merging ${exports.length} chat exports`)
   let merged: Message[] = []
   const gaps: MergerGap[] = []
 
-  exports.forEach((currentExport) => {
+  exports.forEach((currentExport, i) => {
+    debug(`Merging export at index ${i}`)
     if (merged.length === 0) {
       merged.push(...currentExport)
+      debug(`Added first export to chat log`)
       return
     }
 
@@ -51,6 +55,9 @@ export function mergeExports(exports: Message[][]): MergerResult {
       attemptedMessages <= MAX_OVERLAP_CHECKS &&
       attemptedMessages < currentExport.length
     ) {
+      debug(
+        `Looking for a match for chat log message @ index -${attemptedMessages}`
+      )
       const lastMessage = currentExport.at(-attemptedMessages)!
       const matchResult = findMatchingMessage(merged, lastMessage)
       if (matchResult === null) {

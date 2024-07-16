@@ -9,14 +9,10 @@
       "runtimeExecutable": "yarn",
       "runtimeArgs": ["node"],
       "program": "${workspaceFolder}/dist/main.js",
-      "args": [
-        "--input",
-        "data/temp-export.txt",
-        "--daily-stats",
-        "out/daily-stats.csv",
-        "--hourly-stats",
-        "out/hourly.csv"
-      ],
+      "args": ["--input-dir", "data"],
+      "env": {
+        "VERBOSE": "yes"
+      },
       "request": "launch",
       "skipFiles": ["<node_internals>/**"],
       "type": "node"
