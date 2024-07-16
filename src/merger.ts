@@ -29,7 +29,7 @@ function findMatchingMessage(messages: Message[], targetMessage: Message) {
   }
 
   while (messages[i].timestamp >= targetMessage.timestamp && i >= 0) {
-    if (messages[i].timestamp !== targetMessage.timestamp) {
+    if (messages[i].timestamp.getTime() !== targetMessage.timestamp.getTime()) {
       i--
       continue
     }
@@ -39,6 +39,7 @@ function findMatchingMessage(messages: Message[], targetMessage: Message) {
     }
     console.log("AAA")
   }
+  debugger
   return -1
 }
 
@@ -65,7 +66,7 @@ export function mergeExports(exports: Message[][]): MergerResult {
       debug(
         `Looking for a match for current export message @ index ${attemptedMessages}`
       )
-      debugger
+      // debugger
       const lastMessage = currentExport.at(attemptedMessages)!
       const matchResult = findMatchingMessage(merged, lastMessage)
       if (matchResult === null) {
