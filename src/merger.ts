@@ -6,11 +6,19 @@ export interface MergerGap {
   to: Date
 }
 
+export interface MergerPart {
+  from: Date
+  to: Date
+  file: string
+}
+
 export interface MergerResult {
   /** A flattened array of messages */
   messages: Message[]
   /** Describes any gaps in the data, i.e. where time has passed between non-overlapping exports */
   gaps: MergerGap[]
+  /** Describes which chat exports were used for which time period */
+  parts: MergerPart[]
 }
 
 function findReverse<T>(array: T[], target: T) {
@@ -42,13 +50,14 @@ function findMatchingMessage(messages: Message[], targetMessage: Message) {
 }
 
 const MAX_OVERLAP_CHECKS = Infinity // 15
-export function mergeExports(exports: Message[][]): MergerResult {
-  debug(`Merging ${exports.length} chat exports`)
+export function mergeExports(exports: Map<string, Message[]>): MergerResult {
+  debug(`Merging ${exports.size} chat exports`)
   let merged: Message[] = []
   const gaps: MergerGap[] = []
+  const parts: MergerPart[] = []
 
-  exports.forEach((currentExport, i) => {
-    debug(`Merging export at index ${i}`)
+  exports.forEach((currentExport, filename) => {
+    debug(`Merging export from file ${filename}`)
     if (merged.length === 0) {
       merged.push(...currentExport)
       debug(`Added first export to chat log`)
@@ -68,10 +77,15 @@ export function mergeExports(exports: Message[][]): MergerResult {
       const matchResult = findMatchingMessage(merged, lastMessage)
       if (matchResult === null) {
         gaps.push({
-          from: currentExport.at(-1)!.timestamp,
-          to: lastMessage.timestamp,
+          from: merged.at(-1)!.timestamp,
+          to: currentExport.at(0)!.timestamp,
         })
         merged.push(...currentExport)
+        parts.push({
+          file: filename,
+          from: currentExport.at(0)!.timestamp,
+          to: currentExport.at(-1)!.timestamp,
+        })
         return
       }
       if (matchResult > -1) {
@@ -85,5 +99,6 @@ export function mergeExports(exports: Message[][]): MergerResult {
   return {
     messages: merged,
     gaps,
+    parts,
   }
 }
