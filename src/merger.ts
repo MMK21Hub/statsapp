@@ -95,6 +95,7 @@ export function mergeExports(exports: Map<string, Message[]>): MergerResult {
       }
       if (matchResult > -1) {
         merged = merged.slice(0, matchResult)
+        parts.at(-1)!.to = merged.at(-1)!.timestamp
         merged.push(...currentExport)
         parts.push({
           file: filename,
