@@ -3,7 +3,7 @@ import arg from "arg"
 import { DailyStats, HourlyStats, Message, PersonStats } from "./types.js"
 import { toWeekday, objectToCSV, arrayWrap, parse12HourTime } from "./util.js"
 import * as path from "node:path"
-import { mergeExports } from "./merger.js"
+import { MergerGap, MergerPart, mergeExports } from "./merger.js"
 
 const args = arg(
   {
@@ -39,6 +39,26 @@ async function readFilesFromDirectory(
   return resultMap
 }
 
+function printMergeResultSummary(parts: MergerPart[], gaps: MergerGap[]) {
+  debugger
+  console.log(`Merged messages from ${parts.length} chat export(s):`)
+  parts.forEach(({ file, from, to }) => {
+    console.log(
+      `  ${file}: ${from.toLocaleDateString()} --> ${to.toLocaleDateString()}`
+    )
+  })
+  if (gaps.length === 0) {
+    console.log(`No gaps in the data!`)
+    return
+  }
+  console.log(`Gaps in the data:`)
+  gaps.forEach(({ from, to }) => {
+    console.log(
+      `  Missing ${from.toLocaleDateString()} --> ${to.toLocaleDateString()}`
+    )
+  })
+}
+
 async function getProcessedChatLog(): Promise<Message[]> {
   const inputFile = args["--input"]
   const inputDir = args["--input-dir"]
@@ -56,7 +76,7 @@ async function getProcessedChatLog(): Promise<Message[]> {
       })
       .map(([filename, text]) => [filename, parseChatExport(text)])
     const mergeResult = mergeExports(new Map(parsedExports))
-    console.warn(mergeResult.gaps)
+    printMergeResultSummary(mergeResult.parts, mergeResult.gaps)
     return mergeResult.messages
   }
 
