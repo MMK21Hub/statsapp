@@ -89,12 +89,18 @@ export function toWeekday(dayIndex: number) {
 }
 
 /**
- * Parses a 12-hour timestamp, e.g. "6:19 pm", into a 24-hour time
+ * Parses a 12-hour timestamp, e.g. "6:19 pm", or a 24-hour one, into a 24-hour time
  * @param time The time string in human-readable form
  * @returns An array of numbers. First item is the hour and second item is the minute.
  */
-export function parse12HourTime(time: string): [number, number] {
-  const numberPart = time.split(" ")[0]
+export function parseFormattedTime(time: string): [number, number] {
+  const parts = time.split(" ")
+  if (parts.length === 1) {
+    const [hour, minute] = parts[0].split(":").map((num) => parseInt(num))
+    return [hour, minute]
+  }
+
+  const numberPart = parts[0]
   const [rawHour, rawMinute] = numberPart.split(":").map((num) => parseInt(num))
   const isAfternoon = time.includes("pm")
 

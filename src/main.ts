@@ -1,7 +1,12 @@
 import { readFile, writeFile, readdir, stat } from "node:fs/promises"
 import arg from "arg"
 import { DailyStats, HourlyStats, Message, PersonStats } from "./types.js"
-import { toWeekday, objectToCSV, arrayWrap, parse12HourTime } from "./util.js"
+import {
+  toWeekday,
+  objectToCSV,
+  arrayWrap,
+  parseFormattedTime,
+} from "./util.js"
 import * as path from "node:path"
 import { MergerGap, MergerPart, mergeExports } from "./merger.js"
 
@@ -19,7 +24,7 @@ const args = arg(
 )
 
 const chatExportParser =
-  /^(\d{2}\/\d{2}\/\d{4}), (\d{1,2}:\d{2} [ap]m) - (.*): (.*)/gm
+  /^(\d{2}\/\d{2}\/\d{4}), (\d{1,2}:\d{2} ?[ap]?m?) - (.*): (.*)/gm
 
 async function readFilesFromDirectory(
   directory: string
@@ -181,7 +186,7 @@ function parseChatExport(exportData: string) {
     const [_, dateString, timeString, name, content] = match!
     const [day, month, year] = dateString.split("/").map((num) => parseInt(num))
     const dateIndexes = [year, month - 1, day] as const
-    const dateTime = new Date(...dateIndexes, ...parse12HourTime(timeString))
+    const dateTime = new Date(...dateIndexes, ...parseFormattedTime(timeString))
     const dateISO = dateTime.toISOString().split("T")[0]
     const firstName = name.split(" ")[0]
 
