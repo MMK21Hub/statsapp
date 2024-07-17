@@ -34,12 +34,10 @@ function findMatchingMessage(messages: Message[], targetMessage: Message) {
       continue
     }
     if (messages[i].content === targetMessage.content) {
-      debugger
       return i
     }
     i--
   }
-  debugger
   return -1
 }
 
@@ -66,7 +64,6 @@ export function mergeExports(exports: Message[][]): MergerResult {
       debug(
         `Looking for a match for current export message @ index ${attemptedMessages}`
       )
-      // debugger
       const lastMessage = currentExport.at(attemptedMessages)!
       const matchResult = findMatchingMessage(merged, lastMessage)
       if (matchResult === null) {
