@@ -37,7 +37,7 @@ function findMatchingMessage(messages: Message[], targetMessage: Message) {
       debugger
       return i
     }
-    console.log("AAA")
+    i--
   }
   debugger
   return -1
@@ -79,6 +79,7 @@ export function mergeExports(exports: Message[][]): MergerResult {
       }
       if (matchResult > -1) {
         merged = merged.slice(0, matchResult)
+        merged.push(...currentExport)
         return
       }
     }
