@@ -60,6 +60,11 @@ export function mergeExports(exports: Map<string, Message[]>): MergerResult {
     debug(`Merging export from file ${filename}`)
     if (merged.length === 0) {
       merged.push(...currentExport)
+      parts.push({
+        file: filename,
+        from: currentExport.at(0)!.timestamp,
+        to: currentExport.at(-1)!.timestamp,
+      })
       debug(`Added first export to chat log`)
       return
     }
@@ -91,6 +96,14 @@ export function mergeExports(exports: Map<string, Message[]>): MergerResult {
       if (matchResult > -1) {
         merged = merged.slice(0, matchResult)
         merged.push(...currentExport)
+        parts.push({
+          file: filename,
+          from: merged.at(matchResult)!.timestamp,
+          to: currentExport.at(-1)!.timestamp,
+        })
+        debug(
+          `Added report (${filename}) to chat log, with start at index ${matchResult}`
+        )
         return
       }
     }
