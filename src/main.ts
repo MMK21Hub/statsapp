@@ -23,6 +23,8 @@ const args = arg(
   }
 )
 
+export const { default: config } = await import("../config/config.js")
+
 const chatExportParser =
   /^(\d{2}\/\d{2}\/\d{4}), (\d{1,2}:\d{2} ?[ap]?m?) - (.*): (.*)/gm
 
@@ -188,11 +190,12 @@ function parseChatExport(exportData: string) {
     const dateIndexes = [year, month - 1, day] as const
     const dateTime = new Date(...dateIndexes, ...parseFormattedTime(timeString))
     const dateISO = dateTime.toISOString().split("T")[0]
-    const firstName = name.split(" ")[0]
+    const normalName = normalizeName(name)
+    const firstName = normalName.split(" ")[0]
 
     messages.push({
       content,
-      fullName: name,
+      fullName: normalName,
       firstName,
       timestamp: dateTime,
       dateISO,
@@ -213,4 +216,15 @@ function purgePeople(
   )
 
   return hourlyStats.filter(({ name }) => includePeople.includes(name))
+}
+
+function normalizeName(inputName: string) {
+  Object.entries(config.aliases).forEach(([canonicalName, regex]) => {
+    if (regex.test(inputName)) {
+      debugger
+      return canonicalName
+    }
+  })
+
+  return inputName.trim()
 }

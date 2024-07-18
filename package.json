@@ -6,7 +6,7 @@
   "type": "module",
   "version": "v0.1.0",
   "packageManager": "yarn@4.0.2",
-  "main": "dist/main.js",
+  "main": "dist/src/main.js",
   "devDependencies": {
     "@types/node": "^20.2.5",
     "prettier": "2.8.8",
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "watch": "tsc --watch",
-    "debug": "yarn node --inspect dist/main.js"
+    "debug": "yarn node --inspect dist/src/main.js"
   },
   "dependencies": {
     "arg": "^5.0.2"

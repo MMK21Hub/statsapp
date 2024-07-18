@@ -15,3 +15,7 @@ export interface Message {
   timestamp: Date
   dateISO: string
 }
+
+export interface StatsAppConfig {
+  aliases: Record<string, RegExp>
+}

@@ -12,7 +12,7 @@
         "--preserve-symlinks",
         "--preserve-symlinks-main"
       ],
-      "program": "${workspaceFolder}/dist/main.js",
+      "program": "${workspaceFolder}/dist/src/main.js",
       "args": ["--input-dir", "data"],
       "env": {
         "VERBOSE": "yes"
