@@ -219,12 +219,14 @@ function purgePeople(
 }
 
 function normalizeName(inputName: string) {
-  Object.entries(config.aliases).forEach(([canonicalName, regex]) => {
-    if (regex.test(inputName)) {
-      debugger
-      return canonicalName
-    }
+  const aliasMatch = Object.entries(config.aliases).find(([_, regex]) => {
+    return regex.test(inputName)
   })
+
+  if (aliasMatch) {
+    const normalName = aliasMatch[0]
+    return normalName
+  }
 
   return inputName.trim()
 }
