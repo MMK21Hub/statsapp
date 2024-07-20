@@ -77,10 +77,11 @@ async function getProcessedChatLog(): Promise<Message[]> {
   if (inputDir) {
     const exports = await readFilesFromDirectory(inputDir)
     const parsedExports: [string, Message[]][] = Array.from(exports.entries())
-      .sort(([filename_a, _a], [filename_b, _b]) => {
-        if (filename_a < filename_b) return -1
-        if (filename_a > filename_b) return +1
-        return 0
+      .sort(([_a, messages_a], [_b, messages_b]) => {
+        // Sort by the time of the first message in each export
+        const timestamp_a = parseChatExport(messages_a)[0].timestamp
+        const timestamp_b = parseChatExport(messages_b)[0].timestamp
+        return timestamp_a.valueOf() - timestamp_b.valueOf()
       })
       .map(([filename, text]) => [filename, parseChatExport(text)])
     const mergeResult = mergeExports(new Map(parsedExports))
