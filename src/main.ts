@@ -17,6 +17,7 @@ const args = arg(
     "--daily-stats": String,
     "--hourly-stats": String,
     "--daily-word-stats": String,
+    "--chat-log": String,
   },
   {
     permissive: true,
@@ -161,6 +162,7 @@ const outputs: {
   { arg: "--daily-stats", getOutput: () => objectToCSV(dailyStats) },
   { arg: "--daily-word-stats", getOutput: () => objectToCSV(dailyWordStats) },
   { arg: "--hourly-stats", getOutput: () => objectToCSV(filteredHourlyStats) },
+  { arg: "--chat-log", getOutput: () => messagesToChatLog(messages) },
 ]
 
 for (const config of outputs) {
@@ -185,7 +187,7 @@ function parseChatExport(exportData: string) {
 
   let match: RegExpMatchArray | null = chatExportParser.exec(exportData)
   while ((match = chatExportParser.exec(exportData))) {
-    const [_, dateString, timeString, name, content] = match!
+    const [fullMatch, dateString, timeString, name, content] = match!
     const [day, month, year] = dateString.split("/").map((num) => parseInt(num))
     const dateIndexes = [year, month - 1, day] as const
     const dateTime = new Date(...dateIndexes, ...parseFormattedTime(timeString))
@@ -199,6 +201,7 @@ function parseChatExport(exportData: string) {
       firstName,
       timestamp: dateTime,
       dateISO,
+      raw: fullMatch,
     })
   }
 
@@ -229,4 +232,8 @@ function normalizeName(inputName: string) {
   }
 
   return inputName.trim()
+}
+
+function messagesToChatLog(messages: Message[]) {
+  return messages.map((msg) => msg.raw).join("\n")
 }

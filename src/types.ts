@@ -14,6 +14,7 @@ export interface Message {
   content: string
   timestamp: Date
   dateISO: string
+  raw: string
 }
 
 export interface StatsAppConfig {
