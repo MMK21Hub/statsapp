@@ -13,6 +13,7 @@ node_modules
 dist/
 data/
 out/
+config/
 
 # Safeguard to help prevent chat logs being commited
 *.txt

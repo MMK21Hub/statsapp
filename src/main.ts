@@ -1,6 +1,12 @@
 import { readFile, writeFile, readdir, stat } from "node:fs/promises"
 import arg from "arg"
-import { DailyStats, HourlyStats, Message, PersonStats } from "./types.js"
+import {
+  DailyStats,
+  HourlyStats,
+  Message,
+  PersonStats,
+  StatsAppConfig,
+} from "./types.js"
 import {
   toWeekday,
   objectToCSV,
@@ -25,7 +31,19 @@ const args = arg(
   }
 )
 
-export const { default: config } = await import("../config/config.js")
+async function getConfig(): Promise<StatsAppConfig> {
+  try {
+    const configImport = await import("../config/config.js")
+    debug("Imported config.js config file")
+    return configImport.default as StatsAppConfig
+  } catch {
+    return {
+      aliases: {},
+    }
+  }
+}
+
+const config = await getConfig()
 
 const chatExportParser =
   /^(\d{2}\/\d{2}\/\d{4}), (\d{1,2}:\d{2} ?[ap]?m?) - (.*): (.*)/gm
