@@ -41,8 +41,8 @@ This is a Typescript + Node.js project that uses Yarn v4 for package management.
 
 Start the Typescript compiler in watch mode using `yarn run watch`
 
-Enable additional debug logs when running the tool by setting the `VERBOSE` environment variable, e.g.
+Enable additional debug logs when running the tool by setting the `--verbose` flag, e.g.
 
 ```bash
-VERBOSE=y yarn node dist/src/main.js --input-dir data --daily-stats out/daily-stats.csv --chat-log out/chat-log.txt
+VERBOSE=y yarn node dist/src/main.js --verbose --input-dir data --daily-stats out/daily-stats.csv --chat-log out/chat-log.txt
 ```
