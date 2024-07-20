@@ -16,20 +16,24 @@ WhatsApp formats dates and times in the export based on your phone's localizatio
 
 In addition, WhatsApp uses contact names (as they are at time of export) to identify message authors. Since contact names can change over time, when using folder mode, different exports may use different contact names. To remedy this, a configuration file is supported, which allows linking different contact names (identified using a regex) to a single canonical name.
 
+### Output
+
+StatsApp's main job is to create CSV reports that are written to a user-specified file. Any or all of the reports can be omitted from the command line arguments, in which case they won't be generated.
+
 ## Diagrams
 
 ### Single-file mode
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/StatsApp%20single%20file%20mode%20(dark).excalidraw.svg">
-  <img alt="A diagram showing the inputs and outputs for StatsApp, and their corresponding command-line arguments" src="./assets/StatsApp%20single%20file%20mode.excalidraw.svg">
+  <img alt="A diagram showing the inputs and outputs for StatsApp (when given a single file), and their corresponding command-line arguments" src="./assets/StatsApp%20single%20file%20mode.excalidraw.svg">
 </picture>
 
 ### Folder mode
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/StatsApp%20folder%20mode%20(dark).excalidraw.svg">
-  <img alt="A diagram showing the inputs and outputs for StatsApp when it's processing a folder of chat exports, and their corresponding command-line arguments" src="./assets/StatsApp%20folder%20mode.excalidraw.svg">
+  <img alt="A diagram showing the inputs and outputs for StatsApp (when given a folder of chat exports), and their corresponding command-line arguments" src="./assets/StatsApp%20folder%20mode.excalidraw.svg">
 </picture>
 
 ## Development instructions
