@@ -21,6 +21,7 @@ const args = arg(
   {
     "--input": String,
     "--input-dir": String,
+    "--config": String,
     "--daily-stats": String,
     "--hourly-stats": String,
     "--daily-word-stats": String,
@@ -32,15 +33,15 @@ const args = arg(
 )
 
 async function getConfig(): Promise<StatsAppConfig> {
-  try {
-    const configImport = await import("../config/config.js")
-    debug("Imported config.js config file")
-    return configImport.default as StatsAppConfig
-  } catch {
+  if (!args["--config"])
     return {
       aliases: {},
     }
-  }
+
+  const configPath = path.resolve(args["--config"])
+  const configImport = await import(configPath)
+  debug(`Imported config file from ${configPath}`)
+  return configImport.default as StatsAppConfig
 }
 
 const config = await getConfig()
