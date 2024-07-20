@@ -29,6 +29,8 @@ export const { default: config } = await import("../config/config.js")
 
 const chatExportParser =
   /^(\d{2}\/\d{2}\/\d{4}), (\d{1,2}:\d{2} ?[ap]?m?) - (.*): (.*)/gm
+const contactNameExtractor =
+  /(?<=^\d{2}\/\d{2}\/\d{4}, \d{1,2}:\d{2} ?[ap]?m? - ).*(?=: .*)/gm
 
 async function readFilesFromDirectory(
   directory: string
@@ -49,7 +51,6 @@ async function readFilesFromDirectory(
 }
 
 function printMergeResultSummary(parts: MergerPart[], gaps: MergerGap[]) {
-  debugger
   console.log(`Merged messages from ${parts.length} chat export(s):`)
   parts.forEach(({ file, from, to }) => {
     console.log(
@@ -245,5 +246,12 @@ function normalizeName(inputName: string) {
 }
 
 function messagesToChatLog(messages: Message[]) {
-  return messages.map((msg) => msg.raw).join("\n")
+  return messages
+    .map((msg) => {
+      return msg.raw.replace(contactNameExtractor, (contactName) => {
+        debugger
+        return normalizeName(contactName)
+      })
+    })
+    .join("\n")
 }
