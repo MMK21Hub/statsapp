@@ -1,5 +1,7 @@
+import { args } from "./main.js"
+
 export function debug(string: string) {
-  if (!process.env.VERBOSE) return
+  if (!args["--verbose"]) return
   console.debug(string)
 }
 

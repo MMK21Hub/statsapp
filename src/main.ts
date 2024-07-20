@@ -17,11 +17,12 @@ import {
 import * as path from "node:path"
 import { MergerGap, MergerPart, mergeExports } from "./merger.js"
 
-const args = arg(
+export const args = arg(
   {
     "--input": String,
     "--input-dir": String,
     "--config": String,
+    "--verbose": Boolean,
     "--daily-stats": String,
     "--hourly-stats": String,
     "--daily-word-stats": String,
@@ -192,7 +193,7 @@ const outputs: {
 
 for (const config of outputs) {
   const output = config.getOutput()
-  const outputPath = args[config.arg]
+  const outputPath = args[config.arg] as string | string[]
   if (!outputPath) continue
 
   for (const path of arrayWrap(outputPath)) {
