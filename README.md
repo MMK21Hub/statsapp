@@ -2,6 +2,11 @@
 
 Basically, this is a script that processes a WhatsApp chat export and generates CSV files with fun statistics that can be visualized in an app like <https://flourish.studio/>.
 
+## Diagram
+
+![](assets/StatsApp%20single%20file%20mode.excalidraw.svg#gh-light-mode-only)
+![](assets/StatsApp%20single%20file%20mode%20(dark).excalidraw.svg#gh-dark-mode-only)
+
 ## Development instructions
 
 This is a Typescript + Node.js project that uses Yarn v4 for package management. After cloning the repository, install dependencies by running `yarn`.
