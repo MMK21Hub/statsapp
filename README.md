@@ -4,8 +4,10 @@ Basically, this is a script that processes a WhatsApp chat export and generates 
 
 ## Diagram
 
-![](assets/StatsApp%20single%20file%20mode.excalidraw.svg#gh-light-mode-only)
-![](assets/StatsApp%20single%20file%20mode%20(dark).excalidraw.svg#gh-dark-mode-only)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/StatsApp%20single%20file%20mode%20(dark).excalidraw.svg">
+  <img alt="A diagram showing the inputs and outputs for StatsApp, and their corresponding command-line arguments" src="./assets/StatsApp%20single%20file%20mode.excalidraw.svg">
+</picture>
 
 ## Development instructions
 
