@@ -6,6 +6,7 @@ import {
   objectToCSV,
   arrayWrap,
   parseFormattedTime,
+  debug,
 } from "./util.js"
 import * as path from "node:path"
 import { MergerGap, MergerPart, mergeExports } from "./merger.js"
@@ -184,6 +185,7 @@ debugger
  * @returns an array of messages
  */
 function parseChatExport(exportData: string) {
+  const startTime = process.hrtime()
   const messages: Message[] = []
 
   let match: RegExpMatchArray | null = chatExportParser.exec(exportData)
@@ -206,6 +208,10 @@ function parseChatExport(exportData: string) {
     })
   }
 
+  const [timeSecs, timeNanosecs] = process.hrtime(startTime)
+  const milliseconds = (timeNanosecs + timeSecs * 10 ** 9) / 10 ** 6
+
+  debug(`Parsed ${messages.length} messages in ${milliseconds.toFixed(1)} ms`)
   return messages
 }
 
