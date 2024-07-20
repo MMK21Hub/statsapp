@@ -4,20 +4,17 @@ StatsApp is a command-line tool that parses group chat export files from WhatsAp
 
 ## Features
 
-- Accepts either a single chat export as input, or multiple chat exports taken at different times (because WhatsApp limits the number of messages included in a single export)
-- Tested with United Kingdom localization, and supports 12-hour or 24-hour time. If your phone is set to a different locale then your results may vary (feel free to open an issue!)
-
 ### Input
 
-The program accepts a `.txt` file that contains a chat history export from WhatsApp.
+The program accepts a `.txt` file that contains a chat history export from WhatsApp. This is known as single-file mode.
 
-Alternatively, you can provide a folder of chat exports taken at different times. This is essential for long chat histories (1 year+) because WhatsApp limits the number of messages included in a single export.
+Alternatively, you can provide a folder of chat exports taken at different times, known as folder mode. This is essential for long chat histories (1 year+) because WhatsApp limits the number of messages included in a single export.
 
 ### Processing
 
 WhatsApp formats dates and times in the export based on your phone's localization settings. StatsApp has been tested with the United Kingdom locale, and can handle either 12-hour or 24-hour time. If the program fails to parse an export from your phone, please open an issue so that we can add support for your locale!
 
-In addition, WhatsApp uses contact names to identify message authors.
+In addition, WhatsApp uses contact names (as they are at time of export) to identify message authors. Since contact names can change over time, when using folder mode, different exports may use different contact names. To remedy this, a configuration file is supported, which allows linking different contact names (identified using a regex) to a single canonical name.
 
 ## Diagrams
 
