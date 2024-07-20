@@ -69,6 +69,16 @@ export function mergeExports(exports: Map<string, Message[]>): MergerResult {
       return
     }
 
+    const currentExportEnd = currentExport.at(-1)!.timestamp
+    const mergedMessagesEnd = merged.at(-1)!.timestamp
+    if (currentExportEnd < mergedMessagesEnd) {
+      // The time period covered by this export is already fully covered by the merged messages array
+      debug(
+        `Ignoring export ${filename} because it doesn't provide any new messages`
+      )
+      return
+    }
+
     let attemptedMessages = 0
     while (
       attemptedMessages <= MAX_OVERLAP_CHECKS &&
