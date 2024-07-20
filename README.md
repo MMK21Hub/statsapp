@@ -1,8 +1,13 @@
 # StatsApp
 
-Basically, this is a script that processes a WhatsApp chat export and generates CSV files with fun statistics that can be visualized in an app like <https://flourish.studio/>.
+StatsApp is a command-line tool that parses group chat export files from WhatsApp, and performs some data analysis, outputting CSV files that can be visualized in an app like <https://flourish.studio/>.
 
-## Diagram
+## Features
+
+- Accepts either a single chat export as input, or multiple chat exports taken at different times (because WhatsApp limits the number of messages included in a single export)
+- Tested with United Kingdom localization, and supports 12-hour or 24-hour time. If your phone is set to a different locale then your results may vary (feel free to open an issue!)
+
+## Diagrams
 
 ### Single-file mode
 
