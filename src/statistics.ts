@@ -28,7 +28,7 @@ export class StatisticsGenerator {
 
   generateStatistics(): StatisticsOutput {
     this.messages.forEach((message) => {
-      if (message.type == MessageType.Deleted) return console.log("Skip")
+      if (message.type == MessageType.Deleted) return
       this.updateDailyStats(message)
       this.updateDailyWordStats(message)
       this.updateHourlyStats(message)
