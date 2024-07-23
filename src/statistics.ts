@@ -1,4 +1,10 @@
-import { DailyStats, HourlyStats, Message, PersonStats } from "./types.js"
+import {
+  DailyStats,
+  HourlyStats,
+  Message,
+  MessageType,
+  PersonStats,
+} from "./types.js"
 import { toWeekday } from "./util.js"
 
 export interface StatisticsOutput {
@@ -22,6 +28,7 @@ export class StatisticsGenerator {
 
   generateStatistics(): StatisticsOutput {
     this.messages.forEach((message) => {
+      if (message.type == MessageType.Deleted) return console.log("Skip")
       this.updateDailyStats(message)
       this.updateDailyWordStats(message)
       this.updateHourlyStats(message)
