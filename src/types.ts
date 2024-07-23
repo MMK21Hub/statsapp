@@ -15,21 +15,19 @@ export enum MessageType {
   Poll = "poll",
 }
 
+export interface MessageContent {
+  text: string
+  edited: boolean
+}
+
 export interface Message {
   type: MessageType
   fullName: string
   firstName: string
-  content?: string
+  content?: MessageContent
   timestamp: Date
   dateISO: string
-  edited?: boolean
   raw: string
-}
-
-export interface NormalMessage extends Message {
-  type: MessageType.Normal
-  content: string
-  edited: boolean
 }
 
 export interface StatsAppConfig {

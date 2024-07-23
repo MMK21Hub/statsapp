@@ -4,6 +4,7 @@ import {
   DailyStats,
   HourlyStats,
   Message,
+  MessageContent,
   MessageType,
   PersonStats,
   StatsAppConfig,
@@ -143,7 +144,7 @@ messages.forEach(({ dateISO, firstName, timestamp, content }) => {
   // Daily word-based stats
   {
     // A simple method of counting the number of words
-    const words = content.split(" ").length
+    const words = content.text.split(" ").length
     const stats = dailyWordStats
 
     if (!stats[dateISO]) stats[dateISO] = {}
@@ -223,12 +224,11 @@ function parseChatExport(exportData: string) {
     const normalName = normalizeName(name)
     const firstName = normalName.split(" ")[0]
 
-    const { type, content, edited } = parseMessageContent(rawContent)
+    const { type, content } = parseMessageContent(rawContent)
 
     messages.push({
       type,
       content,
-      edited,
       fullName: normalName,
       firstName,
       timestamp: dateTime,
@@ -272,8 +272,7 @@ function normalizeName(inputName: string) {
 
 function parseMessageContent(rawContent: string): {
   type: MessageType
-  edited?: boolean
-  content?: string
+  content?: MessageContent
 } {
   if (rawContent === "POLL:")
     return {
@@ -295,8 +294,10 @@ function parseMessageContent(rawContent: string): {
 
   return {
     type: MessageType.Normal,
-    content: messageContent,
-    edited: isEdited,
+    content: {
+      text: messageContent,
+      edited: isEdited,
+    },
   }
 }
 
