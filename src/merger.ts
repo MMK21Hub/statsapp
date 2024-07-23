@@ -36,12 +36,24 @@ function findMatchingMessage(messages: Message[], targetMessage: Message) {
     return null
   }
 
+  if (!targetMessage.content) {
+    // We can't match a message that doesn't have any identifying text content
+    return -1
+  }
+
   while (messages[i].timestamp >= targetMessage.timestamp && i >= 0) {
-    if (messages[i].timestamp.getTime() !== targetMessage.timestamp.getTime()) {
+    const currentMessage = messages[i]
+    if (
+      currentMessage.timestamp.getTime() !== targetMessage.timestamp.getTime()
+    ) {
       i--
       continue
     }
-    if (messages[i].content === targetMessage.content) {
+    if (!currentMessage.content) {
+      i--
+      continue
+    }
+    if (currentMessage.content.text === targetMessage.content.text) {
       return i
     }
     i--
