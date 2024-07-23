@@ -36,6 +36,21 @@ StatsApp's main job is to create CSV reports that are written to a user-specifie
   <img alt="A diagram showing the inputs and outputs for StatsApp (when given a folder of chat exports), and their corresponding command-line arguments" src="./assets/StatsApp%20folder%20mode.excalidraw.svg">
 </picture>
 
+## Usage guide
+
+### Step 0: Installation
+
+
+### Step 1: Taking a WhatsApp chat export
+
+Open the WhatsApp chat you want to generate statistics for on your phone. In the Android app, press the three dots in the top bar, press **More**, press **Export chat**, and select **Without media** in the popup.
+
+WhatsApp will take some time to generate the export. Once its done, the share screen will pop up, and you can save the `.zip` file it produced by attaching it to a message to yourself, or any other method. Transfer the file to the computer running StatsApp. Finally, extract the `.zip` file so that you have the `.txt` chat export file.
+
+### Step 2: Run StatsApp
+
+TODO
+
 ## Development instructions
 
 This is a Typescript + Node.js project that uses Yarn v4 for package management. After cloning the repository, install dependencies by running `yarn`.
