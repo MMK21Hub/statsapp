@@ -44,7 +44,11 @@ TODO
 
 ### Step 0: Installation
 
-TODO
+1. Clone this repository and change directory into its folder
+2. Ensure you have a modern version of the Yarn package manager installed (see https://yarnpkg.com/getting-started/install)
+3. Run `yarn` to install the dependencies for this program
+4. Run `yarn run compile` to compile the TypeScript source code into executable JavaScript
+
 
 ### Step 1: Taking a WhatsApp chat export
 
