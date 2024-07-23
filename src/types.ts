@@ -8,13 +8,28 @@ export type HourlyStats = {
   name: string
 }[]
 
+export enum MessageType {
+  Normal = "normal",
+  Deleted = "deleted",
+  Media = "media",
+  Poll = "poll",
+}
+
 export interface Message {
+  type: MessageType
   fullName: string
   firstName: string
-  content: string
+  content?: string
   timestamp: Date
   dateISO: string
+  edited?: boolean
   raw: string
+}
+
+export interface NormalMessage extends Message {
+  type: MessageType.Normal
+  content: string
+  edited: boolean
 }
 
 export interface StatsAppConfig {

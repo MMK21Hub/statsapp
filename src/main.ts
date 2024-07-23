@@ -4,6 +4,7 @@ import {
   DailyStats,
   HourlyStats,
   Message,
+  MessageType,
   PersonStats,
   StatsAppConfig,
 } from "./types.js"
@@ -127,6 +128,8 @@ const hourlyStats: HourlyStats = []
 const personStats: PersonStats = {}
 
 messages.forEach(({ dateISO, firstName, timestamp, content }) => {
+  if (!content) return
+
   // Daily message-based stats
   {
     const dateKey = dateISO
@@ -201,8 +204,6 @@ for (const config of outputs) {
   }
 }
 
-debugger
-
 /**
  * Parses a chat export file from WhatsApp. Doesn't work with messages that contain newlines.
  * Ignores system messages.
@@ -214,7 +215,7 @@ function parseChatExport(exportData: string) {
 
   let match: RegExpMatchArray | null = chatExportParser.exec(exportData)
   while ((match = chatExportParser.exec(exportData))) {
-    const [fullMatch, dateString, timeString, name, content] = match!
+    const [fullMatch, dateString, timeString, name, rawContent] = match!
     const [day, month, year] = dateString.split("/").map((num) => parseInt(num))
     const dateIndexes = [year, month - 1, day] as const
     const dateTime = new Date(...dateIndexes, ...parseFormattedTime(timeString))
@@ -222,8 +223,12 @@ function parseChatExport(exportData: string) {
     const normalName = normalizeName(name)
     const firstName = normalName.split(" ")[0]
 
+    const { type, content, edited } = parseMessageContent(rawContent)
+
     messages.push({
+      type,
       content,
+      edited,
       fullName: normalName,
       firstName,
       timestamp: dateTime,
@@ -265,13 +270,43 @@ function normalizeName(inputName: string) {
   return inputName.trim()
 }
 
+function parseMessageContent(rawContent: string): {
+  type: MessageType
+  edited?: boolean
+  content?: string
+} {
+  if (rawContent === "POLL:")
+    return {
+      type: MessageType.Poll,
+    }
+  if (rawContent === "<Media omitted>")
+    return {
+      type: MessageType.Media,
+    }
+  if (rawContent === "This message was deleted")
+    return {
+      type: MessageType.Deleted,
+    }
+
+  const isEdited = rawContent.endsWith("<This message was edited>")
+  const messageContent = isEdited
+    ? rawContent.replace(/<This message was edited>$/, "")
+    : rawContent
+
+  return {
+    type: MessageType.Normal,
+    content: messageContent,
+    edited: isEdited,
+  }
+}
+
 function messagesToChatLog(messages: Message[]) {
+  const allowedMessageTypes = [MessageType.Normal, MessageType.Media]
+
   return messages
+    .filter((msg) => allowedMessageTypes.includes(msg.type))
     .map((msg) => {
-      return msg.raw.replace(contactNameExtractor, (contactName) => {
-        debugger
-        return normalizeName(contactName)
-      })
+      return msg.raw.replace(contactNameExtractor, normalizeName)
     })
     .join("\n")
 }
