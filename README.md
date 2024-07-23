@@ -44,6 +44,7 @@ TODO
 
 ### Step 0: Installation
 
+TODO
 
 ### Step 1: Taking a WhatsApp chat export
 
@@ -69,7 +70,7 @@ yarn node dist/src/main.js <arguments>
 
 ### Step 3: Use the generated files
 
-Upload the CSV output files to a data visualization platform like [Datawrapper](https://www.datawrapper.de) or [Flourish](https://flourish.studio/), use the processed chatlog to generate a [Chat Analytics](https://chatanalytics.app/) report, or
+Upload the CSV output files to a data visualization platform like [Datawrapper](https://www.datawrapper.de) or [Flourish](https://flourish.studio/), use the processed chatlog to generate a [Chat Analytics](https://chatanalytics.app/) report, or do some of your own data visualization. It's up to you!
 
 ## Development instructions
 
