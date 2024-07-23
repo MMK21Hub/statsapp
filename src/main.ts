@@ -1,23 +1,15 @@
 import { readFile, writeFile, readdir, stat } from "node:fs/promises"
 import arg from "arg"
 import {
-  DailyStats,
-  HourlyStats,
   Message,
   MessageContent,
   MessageType,
-  PersonStats,
   StatsAppConfig,
 } from "./types.js"
-import {
-  toWeekday,
-  objectToCSV,
-  arrayWrap,
-  parseFormattedTime,
-  debug,
-} from "./util.js"
+import { objectToCSV, arrayWrap, parseFormattedTime, debug } from "./util.js"
 import * as path from "node:path"
 import { MergerGap, MergerPart, mergeExports } from "./merger.js"
+import { StatisticsGenerator } from "./statistics.js"
 
 export const args = arg(
   {
@@ -123,67 +115,9 @@ async function getProcessedChatLog(): Promise<Message[]> {
 
 const messages = await getProcessedChatLog()
 
-const dailyStats: DailyStats = {}
-const dailyWordStats: DailyStats = {}
-const hourlyStats: HourlyStats = []
-const personStats: PersonStats = {}
-
-messages.forEach(({ dateISO, firstName, timestamp, content }) => {
-  if (!content) return
-
-  // Daily message-based stats
-  {
-    const dateKey = dateISO
-    const nameKey = firstName
-    if (!dailyStats[dateKey]) dailyStats[dateKey] = {}
-    const currentCount = dailyStats[dateKey][nameKey]
-    if (!currentCount) dailyStats[dateKey][nameKey] = 0
-    dailyStats[dateKey][nameKey]++
-  }
-
-  // Daily word-based stats
-  {
-    // A simple method of counting the number of words
-    const words = content.text.split(" ").length
-    const stats = dailyWordStats
-
-    if (!stats[dateISO]) stats[dateISO] = {}
-    const currentCount = stats[dateISO][firstName]
-    if (!currentCount) stats[dateISO][firstName] = 0
-    stats[dateISO][firstName] += words
-  }
-
-  // Hourly stats
-  {
-    const currentWeekday = toWeekday(timestamp.getDay())
-    const currentHour = timestamp.getHours().toString()
-    const matchedIndex = hourlyStats.findIndex(
-      (point) =>
-        point.hour === currentHour &&
-        point.weekday === currentWeekday &&
-        point.name === firstName
-    )
-
-    if (matchedIndex === -1) {
-      hourlyStats.push({
-        count: 1,
-        hour: currentHour,
-        weekday: currentWeekday,
-        name: firstName,
-      })
-    } else {
-      hourlyStats[matchedIndex].count++
-    }
-  }
-
-  // Per-person stats
-  {
-    if (!(firstName in personStats)) personStats[firstName] = 0
-    personStats[firstName]++
-  }
-})
-
-const filteredHourlyStats = purgePeople(personStats, hourlyStats)
+const statisticsGenerator = new StatisticsGenerator(messages)
+const { dailyStats, dailyWordStats, filteredHourlyStats } =
+  statisticsGenerator.generateStatistics()
 
 const outputs: {
   arg: keyof typeof args
@@ -242,19 +176,6 @@ function parseChatExport(exportData: string) {
 
   debug(`Parsed ${messages.length} messages in ${milliseconds.toFixed(1)} ms`)
   return messages
-}
-
-/** Remove individuals from the hourly stats if their total messages is below a threshold */
-function purgePeople(
-  personStats: PersonStats,
-  hourlyStats: HourlyStats
-): HourlyStats {
-  const minMessages = 100
-  const includePeople = Object.entries(personStats).map(([person, count]) =>
-    count > minMessages ? person : null
-  )
-
-  return hourlyStats.filter(({ name }) => includePeople.includes(name))
 }
 
 function normalizeName(inputName: string) {
