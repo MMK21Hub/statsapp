@@ -20,6 +20,10 @@ In addition, WhatsApp uses contact names (as they are at time of export) to iden
 
 StatsApp's main job is to create CSV reports that are written to a user-specified file. Any or all of the reports can be omitted from the command line arguments, in which case they won't be generated.
 
+### Output types
+
+TODO
+
 ## Diagrams
 
 ### Single-file mode
@@ -49,7 +53,23 @@ WhatsApp will take some time to generate the export. Once its done, the share sc
 
 ### Step 2: Run StatsApp
 
-TODO
+Run the program at the command line like this:
+
+```bash
+yarn node dist/src/main.js <arguments>
+```
+
+#### Command-line arguments
+
+* `--input-file [file]` (**required**) specifies the path to the chat export file
+  * `--input-dir [directory]` is an alternative argument for specifying multiple chat export files, see [the folder mode section](#folder-mode)
+* `--config [file]` specifies a path to a JavaScript config file for StatsApp
+* `--verbose` can be specified to make the program print more details of its processing
+* `--daily-stats [file]`, `--hourly-stats [file]`, `--daily-word-stats [file]`, `--chat-log [file]` provide paths to output files, see [output types](#output-types)
+
+### Step 3: Use the generated files
+
+Upload the CSV output files to a data visualization platform like [Datawrapper](https://www.datawrapper.de) or [Flourish](https://flourish.studio/), use the processed chatlog to generate a [Chat Analytics](https://chatanalytics.app/) report, or
 
 ## Development instructions
 
