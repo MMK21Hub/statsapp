@@ -1,6 +1,8 @@
 # StatsApp
 
-StatsApp is a command-line tool that parses group chat export files from WhatsApp, and performs some data analysis, outputting CSV files that can be visualized in an app like <https://flourish.studio/>.
+StatsApp is a command-line tool that parses group chat export files from WhatsApp, and performs some data analysis, outputting CSV files that can be visualized in an app like [Flourish](https://flourish.studio/).
+
+[**Read the usage guide**](#usage-guide)
 
 ## Features
 
@@ -20,7 +22,7 @@ In addition, WhatsApp uses contact names (as they are at time of export) to iden
 
 StatsApp's main job is to create CSV reports that are written to a user-specified file. Any or all of the reports can be omitted from the command line arguments, in which case they won't be generated.
 
-### Output types
+#### Output types
 
 TODO
 
@@ -85,5 +87,5 @@ Start the Typescript compiler in watch mode using `yarn run watch`
 Enable additional debug logs when running the tool by setting the `--verbose` flag, e.g.
 
 ```bash
-VERBOSE=y yarn node dist/src/main.js --verbose --input-dir data --daily-stats out/daily-stats.csv --chat-log out/chat-log.txt
+yarn node dist/src/main.js --verbose --input-dir data --daily-stats out/daily-stats.csv --chat-log out/chat-log.txt
 ```
