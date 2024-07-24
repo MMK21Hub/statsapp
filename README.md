@@ -4,7 +4,7 @@ StatsApp is a command-line tool that parses group chat export files from WhatsAp
 
 [**Read the usage guide**](#usage-guide)
 
-## Features
+## Design
 
 ### Input
 
