@@ -1,5 +1,6 @@
 import {
   DailyStats,
+  HourlyStat,
   HourlyStats,
   Message,
   MessageType,
@@ -35,6 +36,7 @@ export class StatisticsGenerator {
       this.updatePersonStats(message)
     })
 
+    this.postprocessHourlyStats()
     const filteredHourlyStats = this.purgePeople(this.hourlyStats)
     return {
       dailyStats: this.dailyStats,
@@ -83,14 +85,40 @@ export class StatisticsGenerator {
 
     if (matchedIndex === -1) {
       this.hourlyStats.push({
-        count: 1,
-        hour: currentHour,
         weekday: currentWeekday,
+        hour: currentHour,
+        count: 1,
         name: firstName,
       })
     } else {
       this.hourlyStats[matchedIndex].count++
     }
+  }
+
+  /**
+   * Prepends some null data to the top of the person-stats output
+   *
+   * This procedure ensures that days are always displayed in the right order when visualizing the data.
+   * It does this by adding set of lines for each day of the week (in correct order!) for each person.
+   * The count value on each line is set to 0 so that the actual data is unaffected.
+   *
+   * Without this step, a scatter time card on Flourish will have the y-axis start at the weekday of the first message sent.
+   * Even worse, it'll be different for each person!
+   */
+  postprocessHourlyStats() {
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    Object.keys(this.personStats).forEach((person) => {
+      // this.hourlyStats.filter((line) => line.name === person)
+      const extraLines = days.map(
+        (day): HourlyStat => ({
+          weekday: day,
+          hour: "0",
+          count: 0,
+          name: person,
+        })
+      )
+      this.hourlyStats.unshift(...extraLines)
+    })
   }
 
   // Per-person stats

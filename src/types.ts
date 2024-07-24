@@ -1,12 +1,14 @@
 // Statistic formats (not the same as the CSV output formats)
 export type DailyStats = Record<string, Record<string, number>>
 export type PersonStats = Record<string, number>
-export type HourlyStats = {
+export type HourlyStat = {
   weekday: string
   hour: string
   count: number
   name: string
-}[]
+}
+
+export type HourlyStats = HourlyStat[]
 
 export enum MessageType {
   Normal = "normal",
