@@ -2,7 +2,15 @@
 
 StatsApp is a command-line tool that parses group chat export files from WhatsApp, and performs some data analysis, outputting CSV files that can be visualized in an app like [Flourish](https://flourish.studio/).
 
-[**Read the usage guide**](#usage-guide)
+[**👉 Skip to the usage guide**](#usage-guide)
+
+## Features
+
+* Generates CSV data for daily message totals for a column chart or line graph, and hour-based message totals for generating "time card" diagrams
+* Individual data points for each person, so that a specific person's data can be viewed
+* Parses and filters special cases like deleted messages and polls
+* Merging multiple chat exports makes analysis of large chat histories possible
+* Contact name normalization ensures each contact is consistently counted as the same person
 
 ## Design
 
@@ -24,13 +32,19 @@ StatsApp recognizes and handles when chat exports contain text that isn't messag
 
 StatsApp's main job is to create CSV reports that are written to a user-specified file. Any or all of the reports can be omitted from the command line arguments, in which case they won't be generated.
 
-#### Output types
+## Output types
 
 * Daily message counts (`--daily-stats`)
 * Daily word counts (`--daily-word-stats`)
 * Message counts by hour of the day + day of the week (`--hourly-stats`)
 * Chat log (in the same format as the original export from WhatsApp)
   * Includes "media omitted" lines, excludes polls and deleted messages
+
+## Performance
+
+Generates stats from **150k messages** in **2.1 seconds** on my machine (Intel i3-12100)
+
+<!-- 2.12s user 0.31s system 125% cpu 1.938 total -->
 
 ## Limitations
 
