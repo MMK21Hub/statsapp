@@ -18,13 +18,28 @@ WhatsApp formats dates and times in the export based on your phone's localizatio
 
 In addition, WhatsApp uses contact names (as they are at time of export) to identify message authors. Since contact names can change over time, when using folder mode, different exports may use different contact names. To remedy this, a configuration file is supported, which allows linking different contact names (identified using a regex) to a single canonical name.
 
+StatsApp recognizes and handles when chat exports contain text that isn't message content. For example, chat exports can have "media omitted", or "this message was deleted" placeholders. Deleted messages are excluded from most calculations.
+
 ### Output
 
 StatsApp's main job is to create CSV reports that are written to a user-specified file. Any or all of the reports can be omitted from the command line arguments, in which case they won't be generated.
 
 #### Output types
 
-TODO
+* Daily message counts (`--daily-stats`)
+* Daily word counts (`--daily-word-stats`)
+* Message counts by hour of the day + day of the week (`--hourly-stats`)
+* Chat log (in the same format as the original export from WhatsApp)
+  * Includes "media omitted" lines, excludes polls and deleted messages
+
+## Limitations
+
+* The chat export parser assumes that each message ends at the end of its line
+  * This means that if a message has line breaks, only words before the first line break will be included in calculations
+  * Because poll options appear across multiple lines in a chat export, this also means that any text in polls is ignored
+* A message crafted in a particular way can trick the parser
+  * For example, there's no way to differentiate between a deleted message, and a message with the exact content "This message was deleted"
+  * This is a limitation of the text-based export format that WhatsApp provides
 
 ## Diagrams
 
