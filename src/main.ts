@@ -203,7 +203,10 @@ function parseMessageContent(rawContent: string): {
     return {
       type: MessageType.Media,
     }
-  if (rawContent === "This message was deleted")
+  if (
+    rawContent === "This message was deleted" ||
+    rawContent === "You deleted this message"
+  )
     return {
       type: MessageType.Deleted,
     }
