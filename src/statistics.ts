@@ -107,18 +107,19 @@ export class StatisticsGenerator {
    */
   postprocessHourlyStats() {
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    Object.keys(this.personStats).forEach((person) => {
-      // this.hourlyStats.filter((line) => line.name === person)
-      const extraLines = days.map(
-        (day): HourlyStat => ({
-          weekday: day,
-          hour: "0",
-          count: 0,
-          name: person,
-        })
+    const extraLines = Object.keys(this.personStats)
+      .map((person) =>
+        days.map(
+          (day): HourlyStat => ({
+            weekday: day,
+            hour: "0",
+            count: 0,
+            name: person,
+          })
+        )
       )
-      this.hourlyStats.unshift(...extraLines)
-    })
+      .flat()
+    this.hourlyStats.unshift(...extraLines)
   }
 
   // Per-person stats
