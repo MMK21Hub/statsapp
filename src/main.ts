@@ -45,6 +45,8 @@ const chatExportParser =
   /^(\d{2}\/\d{2}\/\d{4}), (\d{1,2}:\d{2} ?[ap]?m?) - (.*): (.*)/gm
 const contactNameExtractor =
   /(?<=^\d{2}\/\d{2}\/\d{4}, \d{1,2}:\d{2} ?[ap]?m? - ).*(?=: .*)/gm
+const editedMessageSuffix = " " + "<This message was edited>"
+const editedMessageSuffixRegex = new RegExp(`${editedMessageSuffix}$`)
 
 async function readFilesFromDirectory(
   directory: string
@@ -211,9 +213,9 @@ function parseMessageContent(rawContent: string): {
       type: MessageType.Deleted,
     }
 
-  const isEdited = rawContent.endsWith("<This message was edited>")
+  const isEdited = rawContent.endsWith(editedMessageSuffix)
   const messageContent = isEdited
-    ? rawContent.replace(/<This message was edited>$/, "")
+    ? rawContent.replace(editedMessageSuffixRegex, "")
     : rawContent
 
   return {
@@ -231,7 +233,12 @@ function messagesToChatLog(messages: Message[]) {
   return messages
     .filter((msg) => allowedMessageTypes.includes(msg.type))
     .map((msg) => {
-      return msg.raw.replace(contactNameExtractor, normalizeName)
+      if (msg.content?.edited) {
+        debugger
+      }
+      return msg.raw
+        .replace(contactNameExtractor, normalizeName)
+        .replace(editedMessageSuffixRegex, "")
     })
     .join("\n")
 }
