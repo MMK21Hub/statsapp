@@ -97,7 +97,7 @@ yarn node dist/src/main.js <arguments>
 
 #### Command-line arguments
 
-* `--input-file [file]` (**required**) specifies the path to the chat export file
+* `--input [file]` (**required**) specifies the path to the chat export file
   * `--input-dir [directory]` is an alternative argument for specifying multiple chat export files, see [the folder mode section](#folder-mode)
 * `--config [file]` specifies a path to a JavaScript config file for StatsApp
 * `--verbose` can be specified to make the program print more details of its processing
