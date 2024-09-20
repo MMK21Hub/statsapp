@@ -14,6 +14,7 @@ export enum MessageType {
   Normal = "normal",
   Deleted = "deleted",
   Media = "media",
+  ViewOnceMedia = "view-once-media",
   Poll = "poll",
 }
 
