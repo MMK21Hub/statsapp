@@ -73,6 +73,11 @@ function parseMessageContent(rawContent: string): {
     return {
       type: MessageType.Media,
     }
+  if (rawContent === "null")
+    // WhatsApp weirdness: "View once" media just gets exported as the string "null"
+    return {
+      type: MessageType.Media,
+    }
   if (
     rawContent === "This message was deleted" ||
     rawContent === "You deleted this message"
