@@ -124,3 +124,7 @@ Enable additional debug logs when running the tool by setting the `--verbose` fl
 ```bash
 yarn node dist/src/main.js --verbose --input-dir data --daily-stats out/daily-stats.csv --chat-log out/chat-log.txt
 ```
+
+## AI usage statement
+
+AI has not been used to help with this project in any way.
