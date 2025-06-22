@@ -21,6 +21,21 @@
       "skipFiles": ["<node_internals>/**"],
       "type": "node"
       // "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+    },
+    {
+      "name": "Run single-file mode",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "node",
+        "--preserve-symlinks",
+        "--preserve-symlinks-main"
+      ],
+      "program": "${workspaceFolder}/dist/src/main.js",
+      "args": ["--input", "/tmp/chat.txt"],
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+      // "outFiles": ["${workspaceFolder}/dist/**/*.js"]
     }
   ]
 }
