@@ -46,9 +46,12 @@ StatsApp's main job is to create CSV reports that are written to a user-specifie
 
 ## Performance
 
-Generates stats from **150k messages** in **2.1 seconds** on my machine (Intel i3-12100)
+Generates stats from **190k messages** (with all outputs enabled) in **1.71 seconds** on my machine (Intel i3-12100)
 
-<!-- 2.12s user 0.31s system 125% cpu 1.938 total -->
+<!--
+Test command: time yarn node dist/src/main.js --input data/WhatsApp\ Chat\ with\ -\ June\ 2024.txt --config dist/config/config.js --chat-log out/chat-log.txt --daily-stats out/daily-stats.csv --hourly-stats out/hourly.csv --daily-word-stats out/daily-words.csv
+Result: 1.71s user 0.17s system 122% cpu 1.535 total
+-->
 
 ## Limitations
 

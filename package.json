@@ -8,9 +8,9 @@
   "packageManager": "yarn@4.0.2",
   "main": "dist/src/main.js",
   "devDependencies": {
-    "@types/node": "^20.2.5",
-    "prettier": "2.8.8",
-    "typescript": "^5.0.4"
+    "@types/node": "^24.0.3",
+    "prettier": "3.5.3",
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "watch": "tsc --watch",
