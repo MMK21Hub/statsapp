@@ -18,9 +18,9 @@ StatsApp is a command-line tool that parses group chat export files from WhatsAp
 
 ### Input
 
-The program accepts a `.txt` file that contains a chat history export from WhatsApp. This is known as single-file mode.
+The program accepts a `.txt` file that contains a chat history export from WhatsApp. You will need to extract it from the `.zip` file that WhatsApp generates.
 
-Alternatively, you can provide a folder of chat exports taken at different times, known as folder mode. This is essential for long chat histories (1 year+) because WhatsApp limits the number of messages included in a single export.
+Alternatively, you can provide a folder of chat exports taken at different times, known as folder mode. ~~This is essential for long chat histories (1 year+) because WhatsApp limits the number of messages included in a single export.~~ _Note: WhatsApp now exports the full chat history, so folder mode should only be required when working with old exports._
 
 ### Processing
 
@@ -39,8 +39,10 @@ StatsApp's main job is to create CSV reports that are written to a user-specifie
 - Daily message counts (`--daily-stats`)
 - Daily word counts (`--daily-word-stats`)
 - Message counts by hour of the day + day of the week (`--hourly-stats`)
-- Chat log (in the same format as the original export from WhatsApp)
-  - Includes "media omitted" lines, excludes polls and deleted messages
+- Chat log (in the same format as the original export from WhatsApp) (`--chat-log`)
+  - Includes "media omitted" lines
+  - Excludes polls and deleted messages
+  - Standardizes contact names using the config file
 
 ## Performance
 
@@ -106,7 +108,7 @@ yarn node dist/src/main.js <arguments>
 
 ### Step 3: Use the generated files
 
-Upload the CSV output files to a data visualization platform like [Datawrapper](https://www.datawrapper.de) or [Flourish](https://flourish.studio/), use the processed chatlog to generate a [Chat Analytics](https://chatanalytics.app/) report, or do some of your own data visualization. It's up to you!
+Upload the CSV output files to a data visualization platform like [Datawrapper](https://www.datawrapper.de) or [Flourish](https://flourish.studio/), use the processed chatlog to generate a [Chat Analytics](https://chatanalytics.app/) or [WhatsAnalyze](https://whatsanalyze.com/) report, or do some of your own data visualization. It's up to you!
 
 ## Development instructions
 
