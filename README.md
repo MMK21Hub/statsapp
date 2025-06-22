@@ -8,11 +8,11 @@ StatsApp is a command-line tool that parses group chat export files from WhatsAp
 
 ## Features
 
-* Generates CSV data for daily message totals for a column chart or line graph, and hour-based message totals for generating "time card" diagrams
-* Individual data points for each person, so that a specific person's data can be viewed
-* Parses and filters special cases like deleted messages and polls
-* Merging multiple chat exports makes analysis of large chat histories possible
-* Contact name normalization ensures each contact is consistently counted as the same person
+- Generates CSV data for daily message totals for a column chart or line graph, and hour-based message totals for generating "time card" diagrams
+- Individual data points for each person, so that a specific person's data can be viewed
+- Parses and filters special cases like deleted messages and polls
+- Merging multiple chat exports makes analysis of large chat histories possible
+- Contact name normalization ensures each contact is consistently counted as the same person
 
 ## Design
 
@@ -36,11 +36,11 @@ StatsApp's main job is to create CSV reports that are written to a user-specifie
 
 ## Output types
 
-* Daily message counts (`--daily-stats`)
-* Daily word counts (`--daily-word-stats`)
-* Message counts by hour of the day + day of the week (`--hourly-stats`)
-* Chat log (in the same format as the original export from WhatsApp)
-  * Includes "media omitted" lines, excludes polls and deleted messages
+- Daily message counts (`--daily-stats`)
+- Daily word counts (`--daily-word-stats`)
+- Message counts by hour of the day + day of the week (`--hourly-stats`)
+- Chat log (in the same format as the original export from WhatsApp)
+  - Includes "media omitted" lines, excludes polls and deleted messages
 
 ## Performance
 
@@ -50,12 +50,12 @@ Generates stats from **150k messages** in **2.1 seconds** on my machine (Intel i
 
 ## Limitations
 
-* The chat export parser assumes that each message ends at the end of its line
-  * This means that if a message has line breaks, only words before the first line break will be included in calculations
-  * Because poll options appear across multiple lines in a chat export, this also means that any text in polls is ignored
-* A message crafted in a particular way can trick the parser
-  * For example, there's no way to differentiate between a deleted message, and a message with the exact content "This message was deleted"
-  * This is a limitation of the text-based export format that WhatsApp provides
+- The chat export parser assumes that each message ends at the end of its line
+  - This means that if a message has line breaks, only words before the first line break will be included in calculations
+  - Because poll options appear across multiple lines in a chat export, this also means that any text in polls is ignored
+- A message crafted in a particular way can trick the parser
+  - For example, there's no way to differentiate between a deleted message, and a message with the exact content "This message was deleted"
+  - This is a limitation of the text-based export format that WhatsApp provides
 
 ## Diagrams
 
@@ -78,10 +78,9 @@ Generates stats from **150k messages** in **2.1 seconds** on my machine (Intel i
 ### Step 0: Installation
 
 1. Clone this repository and change directory into its folder
-2. Ensure you have a modern version of the Yarn package manager installed (see https://yarnpkg.com/getting-started/install)
+2. Ensure you have a modern version of the Yarn package manager installed (see <https://yarnpkg.com/getting-started/install>)
 3. Run `yarn` to install the dependencies for this program
 4. Run `yarn run compile` to compile the TypeScript source code into executable JavaScript
-
 
 ### Step 1: Taking a WhatsApp chat export
 
@@ -99,11 +98,11 @@ yarn node dist/src/main.js <arguments>
 
 #### Command-line arguments
 
-* `--input [file]` (**required**) specifies the path to the chat export file
-  * `--input-dir [directory]` is an alternative argument for specifying multiple chat export files, see [the folder mode section](#folder-mode)
-* `--config [file]` specifies a path to a JavaScript config file for StatsApp
-* `--verbose` can be specified to make the program print more details of its processing
-* `--daily-stats [file]`, `--hourly-stats [file]`, `--daily-word-stats [file]`, `--chat-log [file]` provide paths to output files, see [output types](#output-types)
+- `--input [file]` (**required**) specifies the path to the chat export file
+  - `--input-dir [directory]` is an alternative argument for specifying multiple chat export files, see [the folder mode section](#folder-mode)
+- `--config [file]` specifies a path to a JavaScript config file for StatsApp
+- `--verbose` can be specified to make the program print more details of its processing
+- `--daily-stats [file]`, `--hourly-stats [file]`, `--daily-word-stats [file]`, `--chat-log [file]` provide paths to output files, see [output types](#output-types)
 
 ### Step 3: Use the generated files
 
