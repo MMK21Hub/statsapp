@@ -1,4 +1,4 @@
-import { args } from "./main.js"
+import { args } from "./args.js"
 
 export function debug(string: string) {
   if (!args["--verbose"]) return

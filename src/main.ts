@@ -1,39 +1,9 @@
 import { readFile, writeFile } from "node:fs/promises"
-import arg from "arg"
-import { Message, StatsAppConfig } from "./types.js"
-import { objectToCSV, arrayWrap, debug } from "./util.js"
-import * as path from "node:path"
+import { Message } from "./types.js"
+import { objectToCSV, arrayWrap } from "./util.js"
 import { StatisticsGenerator } from "./statistics.js"
 import { messagesToChatLog, parseChatExport } from "./parser.js"
-
-export const args = arg(
-  {
-    "--input": String,
-    "--config": String,
-    "--verbose": Boolean,
-    "--daily-stats": String,
-    "--hourly-stats": String,
-    "--daily-word-stats": String,
-    "--chat-log": String,
-  },
-  {
-    permissive: true,
-  }
-)
-
-async function getConfig(): Promise<StatsAppConfig> {
-  if (!args["--config"])
-    return {
-      aliases: {},
-    }
-
-  const configPath = path.resolve(args["--config"])
-  const configImport = await import(configPath)
-  debug(`Imported config file from ${configPath}`)
-  return configImport.default as StatsAppConfig
-}
-
-const config = await getConfig()
+import { args } from "./args.js"
 
 async function getProcessedChatLog(): Promise<Message[]> {
   const inputFile = args["--input"]

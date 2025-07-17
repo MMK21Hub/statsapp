@@ -1,4 +1,4 @@
-import config from "../config/config.js"
+import { config } from "./args.js"
 import { Message, MessageType, MessageContent } from "./types.js"
 import { parseFormattedTime, debug } from "./util.js"
 
