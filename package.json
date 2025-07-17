@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "version": "v0.1.0",
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.9.2",
   "main": "dist/src/main.js",
   "devDependencies": {
     "@types/node": "^24.0.3",
