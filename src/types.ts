@@ -35,4 +35,10 @@ export interface Message {
 
 export interface StatsAppConfig {
   aliases: Record<string, RegExp>
+  people: Record<string, PersonOptions>
+}
+
+export type PersonOptions = {
+  match: RegExp | string
+  include?: boolean
 }

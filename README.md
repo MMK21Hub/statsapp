@@ -117,4 +117,4 @@ yarn node dist/src/main.js --verbose --input data/chat.txt --daily-stats out/dai
 
 ## AI usage statement
 
-AI has not been used to help with this project in any way.
+GitHub Copilot's inline completions have been used while writing code.

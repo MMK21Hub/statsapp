@@ -1,5 +1,5 @@
 import { config } from "./args.js"
-import { Message, MessageType, MessageContent } from "./types.js"
+import { Message, MessageType, MessageContent, PersonOptions } from "./types.js"
 import { parseFormattedTime, debug } from "./util.js"
 
 const chatExportParser =
@@ -21,11 +21,13 @@ export function parseChatExport(exportData: string) {
   let match: RegExpMatchArray | null = chatExportParser.exec(exportData)
   while ((match = chatExportParser.exec(exportData))) {
     const [fullMatch, dateString, timeString, name, rawContent] = match!
+    const nameConfig = getNameConfig(name)
+    if (!nameConfig.include) continue
     const [day, month, year] = dateString.split("/").map((num) => parseInt(num))
     const dateIndexes = [year, month - 1, day] as const
     const dateTime = new Date(...dateIndexes, ...parseFormattedTime(timeString))
     const dateISO = dateTime.toISOString().split("T")[0]
-    const normalName = normalizeName(name)
+    const normalName = nameConfig.preferredName
     const firstName = normalName.split(" ")[0]
 
     const { type, content } = parseMessageContent(rawContent)
@@ -48,17 +50,25 @@ export function parseChatExport(exportData: string) {
   return messages
 }
 
-function normalizeName(inputName: string) {
-  const aliasMatch = Object.entries(config.aliases).find(([_, regex]) => {
-    return regex.test(inputName)
-  })
-
-  if (aliasMatch) {
-    const normalName = aliasMatch[0]
-    return normalName
+function getNameConfig(
+  inputName: string
+): PersonOptions & { preferredName: string } {
+  const personConfig = Object.entries(config.people).find(([_, options]) =>
+    new RegExp(options.match).test(inputName)
+  )
+  // Default config (we include people by default)
+  if (!personConfig)
+    return {
+      preferredName: inputName.trim(),
+      match: inputName,
+      include: true,
+    }
+  // Return the options and include the name that the person should be normalized to
+  const [preferredName, options] = personConfig
+  return {
+    preferredName,
+    ...options,
   }
-
-  return inputName.trim()
 }
 
 function parseMessageContent(rawContent: string): {
@@ -106,11 +116,12 @@ export function messagesToChatLog(messages: Message[]) {
   return messages
     .filter((msg) => allowedMessageTypes.includes(msg.type))
     .map((msg) => {
-      if (msg.content?.edited) {
-        debugger
-      }
+      if (msg.content?.edited) debugger
       return msg.raw
-        .replace(contactNameExtractor, normalizeName)
+        .replace(
+          contactNameExtractor,
+          (name) => getNameConfig(name).preferredName
+        )
         .replace(editedMessageSuffixRegex, "")
     })
     .join("\n")
