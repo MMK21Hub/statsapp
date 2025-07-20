@@ -3,13 +3,13 @@
     "enabled": false
   },
   "release": {
-    "enabled": true,
     "github": {
       "enabled": true,
       "repo": "statsapp"
     }
   },
   "scripts": {
-    "postrelease": "npm publish"
+    "enabled": true,
+    "postrelease": "yarn npm publish"
   }
 }
