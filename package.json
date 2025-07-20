@@ -4,7 +4,7 @@
   "description": "A Node.js script to process WhatsApp chat exports and create data visualizations",
   "license": "MIT",
   "type": "module",
-  "version": "v0.1.0",
+  "version": "v0.2.0",
   "packageManager": "yarn@4.9.2",
   "main": "dist/src/main.js",
   "devDependencies": {
