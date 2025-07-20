@@ -1,6 +1,6 @@
 # StatsApp
 
-[![Built during Arcade 2024](https://badges.api.lorebooks.wiki/badges/hackclub/arcade)](https://hackclub.com/arcade)
+[![Built during Arcade 2024](https://badges.api.lorebooks.wiki/badges/hackclub/arcade)](https://hackclub.com/arcade) [![Built during Summer of Making 2025](https://img.shields.io/badge/Built_during-Summer_of_Making_2025-D4B798?labelColor=4D3A4D)](https://summer.hackclub.com/)
 
 StatsApp is a command-line tool that parses group chat export files from WhatsApp, and performs some data analysis, outputting CSV files that can be visualized in an app like [Flourish](https://flourish.studio/).
 
