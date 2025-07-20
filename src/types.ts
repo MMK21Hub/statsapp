@@ -33,11 +33,15 @@ export interface Message {
   raw: string
 }
 
+/** Configuration options for StatsApp */
 export interface StatsAppConfig {
   people: Record<string, PersonOptions>
 }
 
+/** Customization options for a person */
 export type PersonOptions = {
+  /** An exact string, or a regular expression to match contact names that correspond to this contact */
   match: RegExp | string
+  /** Set to `false` to exclude this contact from any reports */
   include?: boolean
 }

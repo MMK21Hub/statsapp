@@ -14,7 +14,7 @@ export const args = arg(
     "--chat-log": String,
   },
   {
-    permissive: true,
+    permissive: false,
   }
 )
 
