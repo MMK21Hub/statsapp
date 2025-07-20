@@ -1,0 +1,15 @@
+{
+  "changelog": {
+    "enabled": false
+  },
+  "release": {
+    "enabled": true,
+    "github": {
+      "enabled": true,
+      "repo": "statsapp"
+    }
+  },
+  "scripts": {
+    "postrelease": "npm publish"
+  }
+}
