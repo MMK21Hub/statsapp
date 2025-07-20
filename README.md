@@ -11,8 +11,8 @@ StatsApp is a command-line tool that parses group chat export files from WhatsAp
 - Generates CSV data for daily message totals for a column chart or line graph, and hour-based message totals for generating "time card" diagrams
 - Individual data points for each person, so that a specific person's data can be viewed
 - Parses and filters special cases like deleted messages and polls
-- Merging multiple chat exports makes analysis of large chat histories possible
-- Contact name normalization ensures each contact is consistently counted as the same person
+- Names can be customized to avoid leaking your embarrassing contact names
+- Tested for large chat histories (190k+ messages)
 
 ## Design
 
@@ -20,19 +20,21 @@ StatsApp is a command-line tool that parses group chat export files from WhatsAp
 
 The program accepts a `.txt` file that contains a chat history export from WhatsApp. You will need to extract it from the `.zip` file that WhatsApp generates.
 
-Alternatively, you can provide a folder of chat exports taken at different times, known as folder mode. ~~This is essential for long chat histories (1 year+) because WhatsApp limits the number of messages included in a single export.~~ _Note: WhatsApp now exports the full chat history, so folder mode should only be required when working with old exports._
-
-### Processing
+### Pre-processing
 
 WhatsApp formats dates and times in the export based on your phone's localization settings. StatsApp has been tested with the United Kingdom locale, and can handle either 12-hour or 24-hour time. If the program fails to parse an export from your phone, please open an issue so that we can add support for your locale!
 
-In addition, WhatsApp uses contact names (as they are at time of export) to identify message authors. Since contact names can change over time, when using folder mode, different exports may use different contact names. To remedy this, a configuration file is supported, which allows linking different contact names (identified using a regex) to a single canonical name.
+If a configuration file is provided, it is used to rename contact names to make the data more consistent.
 
 StatsApp recognizes and handles when chat exports contain text that isn't message content. For example, chat exports can have "media omitted", or "this message was deleted" placeholders. Deleted messages are excluded from most calculations.
 
 ### Output
 
 StatsApp's main job is to create CSV reports that are written to a user-specified file. Any or all of the reports can be omitted from the command line arguments, in which case they won't be generated.
+
+It can also generate a chat log with in the same format at the original export, but with the StatsApp's pre-processing applied. This can then be forwarded to a separate tool.
+
+See [the output types section](#output-types) below for details.
 
 ## Output types
 
@@ -64,21 +66,10 @@ Result: 1.71s user 0.17s system 122% cpu 1.535 total
 
 ## Diagrams
 
-### Single-file mode
-
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/StatsApp%20single%20file%20mode%20(dark).excalidraw.svg">
-  <img alt="A diagram showing the inputs and outputs for StatsApp (when given a single file), and their corresponding command-line arguments" src="./assets/StatsApp%20single%20file%20mode.excalidraw.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/statsapp-v0.2-light.excalidraw.svg">
+  <img alt="A diagram showing the inputs and outputs for StatsApp, and their corresponding command-line arguments" src="./assets/statsapp-v0.2.excalidraw.svg">
 </picture>
-
-### Folder mode
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/StatsApp%20folder%20mode%20(dark).excalidraw.svg">
-  <img alt="A diagram showing the inputs and outputs for StatsApp (when given a folder of chat exports), and their corresponding command-line arguments" src="./assets/StatsApp%20folder%20mode.excalidraw.svg">
-</picture>
-
-## Usage guide
 
 ### Step 0: Installation
 
@@ -104,7 +95,6 @@ yarn node dist/src/main.js <arguments>
 #### Command-line arguments
 
 - `--input [file]` (**required**) specifies the path to the chat export file
-  - `--input-dir [directory]` is an alternative argument for specifying multiple chat export files, see [the folder mode section](#folder-mode)
 - `--config [file]` specifies a path to a JavaScript config file for StatsApp
 - `--verbose` can be specified to make the program print more details of its processing
 - `--daily-stats [file]`, `--hourly-stats [file]`, `--daily-word-stats [file]`, `--chat-log [file]` provide paths to output files, see [output types](#output-types)
@@ -122,7 +112,7 @@ Start the Typescript compiler in watch mode using `yarn run watch`
 Enable additional debug logs when running the tool by setting the `--verbose` flag, e.g.
 
 ```bash
-yarn node dist/src/main.js --verbose --input-dir data --daily-stats out/daily-stats.csv --chat-log out/chat-log.txt
+yarn node dist/src/main.js --verbose --input data/chat.txt --daily-stats out/daily-stats.csv --chat-log out/chat-log.txt
 ```
 
 ## AI usage statement
