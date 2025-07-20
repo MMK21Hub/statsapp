@@ -6,6 +6,11 @@ StatsApp is a command-line tool that parses group chat export files from WhatsAp
 
 [**👉 Skip to the usage guide**](#usage-guide)
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="./assets/statsapp-v0.2-light.excalidraw.svg">
+  <img alt="A diagram showing the inputs and outputs for StatsApp, and their corresponding command-line arguments" src="./assets/statsapp-v0.2.excalidraw.svg">
+</picture>
+
 ## Features
 
 - Generates CSV data for daily message totals for a column chart or line graph, and hour-based message totals for generating "time card" diagrams
@@ -64,12 +69,7 @@ Result: 1.71s user 0.17s system 122% cpu 1.535 total
   - For example, there's no way to differentiate between a deleted message, and a message with the exact content "This message was deleted"
   - This is a limitation of the text-based export format that WhatsApp provides
 
-## Diagrams
-
-<picture>
-  <source media="(prefers-color-scheme: light)" srcset="./assets/statsapp-v0.2-light.excalidraw.svg">
-  <img alt="A diagram showing the inputs and outputs for StatsApp, and their corresponding command-line arguments" src="./assets/statsapp-v0.2.excalidraw.svg">
-</picture>
+## Usage guide
 
 ### Step 0: Installation
 
