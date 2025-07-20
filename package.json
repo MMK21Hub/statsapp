@@ -10,6 +10,7 @@
   ],
   "packageManager": "yarn@4.9.2",
   "main": "dist/src/main.js",
+  "bin": "node dist/src/main.js",
   "devDependencies": {
     "@types/node": "^24.0.3",
     "prettier": "3.5.3",
