@@ -34,7 +34,6 @@ export interface Message {
 }
 
 export interface StatsAppConfig {
-  aliases: Record<string, RegExp>
   people: Record<string, PersonOptions>
 }
 

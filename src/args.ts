@@ -21,7 +21,7 @@ export const args = arg(
 async function getConfig(): Promise<StatsAppConfig> {
   if (!args["--config"])
     return {
-      aliases: {},
+      people: {},
     }
 
   const configPath = path.resolve(args["--config"])
