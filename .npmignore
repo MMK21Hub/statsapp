@@ -1,0 +1,11 @@
+node_modules
+.git/
+.env
+.prettierrc.json
+.vscode/
+.yarn/
+.editorconfig
+data/
+config/
+out/
+*.txt
