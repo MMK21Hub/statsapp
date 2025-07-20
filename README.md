@@ -95,13 +95,40 @@ yarn node dist/src/main.js <arguments>
 #### Command-line arguments
 
 - `--input [file]` (**required**) specifies the path to the chat export file
-- `--config [file]` specifies a path to a JavaScript config file for StatsApp
+- `--config [file]` specifies a path to a JavaScript [config file](#config-file) for StatsApp
 - `--verbose` can be specified to make the program print more details of its processing
 - `--daily-stats [file]`, `--hourly-stats [file]`, `--daily-word-stats [file]`, `--chat-log [file]` provide paths to output files, see [output types](#output-types)
 
 ### Step 3: Use the generated files
 
 Upload the CSV output files to a data visualization platform like [Datawrapper](https://www.datawrapper.de) or [Flourish](https://flourish.studio/), use the processed chatlog to generate a [Chat Analytics](https://chatanalytics.app/) or [WhatsAnalyze](https://whatsanalyze.com/) report, or do some of your own data visualization. It's up to you!
+
+## Config file
+
+You can customize contact names and exclude selected people from the reports using a configuration file. In technical terms, a config file is a JavaScript file with a default export of a valid `StatsAppConfig` object. It looks like this:
+
+```js
+export default {
+  // Customize specific people. Anyone not listed will be included by default.
+  people: {
+    // This person will be displayed as "John Smith" in reports
+    "John Smith": {
+      // Match any contact name containing "John"
+      match: /John/,
+    },
+    // Another example: map the contact "Mr President" or "Former President" to "Joe Biden"
+    "Joe Biden": {
+      match: /Mr President|Former President/i,
+    },
+    // Exclude any contacts that match "Stallman" from reports
+    // Note that the "Richard Stallman" label does not do anything in this case
+    "Richard Stallman": {
+      match: /Stallman/,
+      include: false,
+    },
+  },
+}
+```
 
 ## Development instructions
 
